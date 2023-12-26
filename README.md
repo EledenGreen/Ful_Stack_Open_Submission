@@ -1,4 +1,4 @@
 Course: Full Stack Open
-University of Helsniky
+University of Helsinky
 
 Repository dedicated for Course Exercises Submission.
