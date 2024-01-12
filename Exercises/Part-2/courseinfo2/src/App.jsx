@@ -1,6 +1,4 @@
-import Header from './components/Header'
-import Content from './components/Content'
-import Total from './components/Total'
+import Course from './components/Course'
 
 const App = () => {
   const course = [
@@ -50,23 +48,13 @@ const App = () => {
 
   return (
     <div>
-      <div><strong>Web development curriculum</strong></div>
+      <h2><em>Web development curriculum</em></h2>
       <Course course={course} />
     </div>
   )
 }
 
-const Course = ({course}) => {
-  return (
-    <div>
-      <div>
-        {course.map(courses => (
-          <Content key ={courses.id} courses={courses} />
-        ))}
-      </div>
-    </div>
-  )
-}
+
 
 export default App
 
