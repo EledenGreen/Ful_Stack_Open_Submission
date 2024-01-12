@@ -13,4 +13,4 @@ const Content = ({courses}) => {
     )
   }
 
-  export default Content
+export default Content
