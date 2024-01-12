@@ -50,7 +50,8 @@ const App = () => {
 
   return (
     <div>
-      <Course key={course.id} course={course} />
+      <div><strong>Web development curriculum</strong></div>
+      <Course course={course} />
     </div>
   )
 }
@@ -58,11 +59,14 @@ const App = () => {
 const Course = ({course}) => {
   return (
     <div>
-      <Header course={course} />
-      <Content parts={course.parts} />
-      <Total parts={course.parts} />
+      <div>
+        {course.map(courses => (
+          <Content key ={courses.id} courses={courses} />
+        ))}
+      </div>
     </div>
   )
 }
 
 export default App
+

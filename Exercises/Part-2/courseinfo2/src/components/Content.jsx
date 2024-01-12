@@ -1,13 +1,14 @@
 import Part from './Part'
+import Total from './Total'
 
 
 //const variables are passed as props by the <Content .... />
-const Content = ({parts}) => {
+const Content = ({courses}) => {
     return (
       <div>
-        <Part no='1' topic={parts[0].name} exercise={parts[0].exercises} />
-        <Part no='2' topic={parts[1].name} exercise={parts[1].exercises} />
-        <Part no='3' topic={parts[2].name} exercise={parts[2].exercises} /> 
+        <h2>{courses.name}</h2>
+        <Part parts={courses.parts} />
+        <Total parts={courses.parts} />
       </div>
     )
   }
