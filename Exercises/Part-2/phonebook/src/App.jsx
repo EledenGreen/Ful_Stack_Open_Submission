@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useState } from "react"
+import Form from "./components/Form"
+import SearchFilter from "./components/SearchFilter"
+import Persons from "./components/Persons"
 
 const App = () => {
   const [persons, setPersons] = useState([{name: 'Arto Hellas', number: '1234567890',id: 0}])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
+  const [search, setNewSearch] = useState('')
   
 
   const addPhonebook = (event) => {
@@ -15,7 +19,7 @@ const App = () => {
     }
 
     const flag = persons.find(person => person.name === phoneBookObject.name)
-
+    
     if(flag)
     { 
       let message = phoneBookObject.name
@@ -28,7 +32,6 @@ const App = () => {
     setNewNumber('')
   }
 
-
   const handlePhoneBookChange = (event) => {
     console.log(event.target.value)
     setNewName(event.target.value)
@@ -39,35 +42,29 @@ const App = () => {
     setNewNumber(event.target.value)
   }
 
+  const handleSearch = (event) => {
+    console.log(event.target.value)
+    setNewSearch(event.target.value)
+
+  }
+  
   return (
     <div>
       <h2>Phonebook</h2>
-      <form onSubmit={addPhonebook}>
-        <div>
-          name: 
-          <input 
-            value={newName}
-            onChange={handlePhoneBookChange}
-            />
-        </div>
-        <div>
-          number:
-          <input
-            value={newNumber}
-            onChange={handlePhoneNoChange} />
-        </div>
-          <button type="submit">add</button>
-      </form>
+
+        <SearchFilter search={search} handleSearch={handleSearch} />
+
+      <h2>Add a new</h2>
+      
+        <Form 
+          addPhonebook={addPhonebook} newName={newName} handlePhoneBookChange={handlePhoneBookChange}
+          newNumber={newNumber} handlePhoneNoChange={handlePhoneNoChange}
+        />
+      
       <h2>Numbers</h2>
-      <div>
-        <ul>
-          {persons.map(person => (
-            <li key={person.id}>
-              {person.name} ~ {person.number}
-            </li>
-          ))}
-        </ul>
-      </div>
+        
+        <Persons persons={persons} search={search} setPersons={setPersons} />
+
     </div>
   )
 
