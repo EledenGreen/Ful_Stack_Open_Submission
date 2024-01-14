@@ -49,9 +49,22 @@ const App = () => {
     
     if(flag)
     { 
-      let message = phoneBookObject.name
-      alert(message + " is already added to phonebook")
+        if(window.confirm(`${phoneBookObject.name} is already to phonebook, replace the old number with a new one ?`))
+        { 
+          const personToUpdate = persons.find((person) => person.name === phoneBookObject.name)
+
+          phone
+            .updateNumber(personToUpdate.id, phoneBookObject)
+            .then(() =>{
+              phone 
+                .getAll()
+                .then(initialPhone => {
+                  setPersons(initialPhone)
+                })
+            })
+        }
     }
+  
     else{
       phone
       .create(phoneBookObject)
