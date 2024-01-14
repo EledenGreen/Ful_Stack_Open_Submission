@@ -19,6 +19,25 @@ const App = () => {
   }, [])
   console.log('render', persons.length, 'persons')
 
+  const removeButton = (id) => {  
+    const personToRemove = persons.find((person) => person.id === id);
+
+    if(window.confirm(`Delete ${personToRemove.name} ?`)){
+    phone
+      .remove(id)
+      .then(() => {
+        phone
+          .getAll()
+          .then(initialPhone => {
+            setPersons(initialPhone)
+          })
+      }
+
+      
+      )   
+  }
+}
+
   const addPhonebook = (event) => {
     event.preventDefault()
     const phoneBookObject = {
@@ -75,7 +94,7 @@ const App = () => {
       
       <h2>Numbers</h2>
         
-        <Persons persons={persons} search={search} setPersons={setPersons} />
+        <Persons persons={persons} search={search} setPersons={setPersons} removeButton={removeButton}/>
 
     </div>
   )
