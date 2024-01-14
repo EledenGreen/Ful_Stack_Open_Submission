@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react"
-import axios from 'axios'
 import Form from "./components/Form"
 import SearchFilter from "./components/SearchFilter"
 import Persons from "./components/Persons"
+import axios from "axios"
+import phone from "./services/phone"
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -11,12 +12,10 @@ const App = () => {
   const [search, setNewSearch] = useState('')
   
   useEffect(() => {
-    console.log('effect')
-    axios 
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
+    phone
+      .getAll()
+      .then(initialPhone => {
+        setPersons(initialPhone)
       })
   }, [])
   console.log('render', persons.length, 'persons')
