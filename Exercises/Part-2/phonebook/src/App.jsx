@@ -2,7 +2,6 @@ import { useState, useEffect } from "react"
 import Form from "./components/Form"
 import SearchFilter from "./components/SearchFilter"
 import Persons from "./components/Persons"
-import axios from "axios"
 import phone from "./services/phone"
 
 const App = () => {
@@ -25,7 +24,6 @@ const App = () => {
     const phoneBookObject = {
       name: newName,
       number: newNumber,
-      id: persons.length + 1,
     }
 
     const flag = persons.find(person => person.name === phoneBookObject.name)
@@ -36,7 +34,11 @@ const App = () => {
       alert(message + " is already added to phonebook")
     }
     else{
-      setPersons(persons.concat(phoneBookObject))
+      phone
+      .create(phoneBookObject)
+      .then(returnedPhone => {
+        setPersons(persons.concat(returnedPhone))
+      })
     }
     setNewName('')
     setNewNumber('')
