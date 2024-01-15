@@ -4,11 +4,23 @@ import SearchFilter from "./components/SearchFilter"
 import Persons from "./components/Persons"
 import phone from "./services/phone"
 
+const Notification = ({updateMessage}) => {
+  if(updateMessage === null) {
+    return null
+  }
+  return (
+    <div className="updateMessage">
+      {updateMessage}
+    </div>
+  )
+}
+
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [search, setNewSearch] = useState('')
+  const [updateMessage, setUpdateMessage] = useState('')
   
   useEffect(() => {
     phone
@@ -56,9 +68,16 @@ const App = () => {
           phone
             .updateNumber(personToUpdate.id, phoneBookObject)
             .then(() =>{
+              setUpdateMessage(
+                `${personToUpdate.name}'s number is now updated`
+              )
+              setTimeout(() => {
+                setUpdateMessage(null)
+              }, 2000)
               phone 
                 .getAll()
                 .then(initialPhone => {
+
                   setPersons(initialPhone)
                 })
             })
@@ -70,12 +89,19 @@ const App = () => {
       .create(phoneBookObject)
       .then(returnedPhone => {
         setPersons(persons.concat(returnedPhone))
+
+        setUpdateMessage(
+          `'${phoneBookObject.name}' added successfully.`
+        )
+        setTimeout(() => {
+          setUpdateMessage(null)
+        }, 1500)
       })
     }
     setNewName('')
     setNewNumber('')
-  }
-
+    }
+  
   const handlePhoneBookChange = (event) => {
     console.log(event.target.value)
     setNewName(event.target.value)
@@ -95,16 +121,14 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-
-        <SearchFilter search={search} handleSearch={handleSearch} />
+      <Notification updateMessage={updateMessage} />
+      <SearchFilter search={search} handleSearch={handleSearch} />
 
       <h2>Add a new</h2>
-      
         <Form 
           addPhonebook={addPhonebook} newName={newName} handlePhoneBookChange={handlePhoneBookChange}
           newNumber={newNumber} handlePhoneNoChange={handlePhoneNoChange}
         />
-      
       <h2>Numbers</h2>
         
         <Persons persons={persons} search={search} setPersons={setPersons} removeButton={removeButton}/>
