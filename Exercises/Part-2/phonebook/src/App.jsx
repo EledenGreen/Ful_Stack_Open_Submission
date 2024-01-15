@@ -20,7 +20,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [search, setNewSearch] = useState('')
-  const [updateMessage, setUpdateMessage] = useState('')
+  const [updateMessage, setUpdateMessage] = useState(null)
   
   useEffect(() => {
     phone
@@ -38,12 +38,19 @@ const App = () => {
     phone
       .remove(id)
       .then(() => {
+        setUpdateMessage(
+          `'${personToRemove.name}'' successfully deleted from the server.`
+        )
+        setTimeout(() => {
+          setUpdateMessage(null)
+        }, 2000)
         phone
           .getAll()
           .then(initialPhone => {
             setPersons(initialPhone)
           })
       }
+      
 
       
       )   
@@ -80,6 +87,21 @@ const App = () => {
 
                   setPersons(initialPhone)
                 })
+            })
+            .catch(error => {
+              setUpdateMessage(
+                `${phoneBookObject.name}'s has already been removed from the server!`
+              )
+              setTimeout(() => {
+                setUpdateMessage(null)
+              }, 2000)
+              phone 
+                .getAll()
+                .then(initialPhone => {
+
+                  setPersons(initialPhone)
+                })
+
             })
         }
     }
