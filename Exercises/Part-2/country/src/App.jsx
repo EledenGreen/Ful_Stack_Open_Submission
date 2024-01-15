@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { OPENWEATHERMAP_API_KEY } from "./weatherapi"; // Adjust the path if necessary
+
 
 const App = () => {
 
@@ -135,8 +137,42 @@ const OneCountry = ({arr}) => {
           </div>
         ))}
     </div>
+    <div>
+      {arr.map(country => (
+          <div key = {country.name.official}>
+            <Weather lat={country.latlng[0]} long={country.latlng[1]} />
+          </div>
+        ))}
+    </div>
   </div>
   )
+}
+
+const Weather = ({lat, long}) => {
+
+  const [weatherData, setWeatherData] = useState(null)
+
+  useEffect(() => {
+
+  axios
+    .get(`https://api.openweathermap.org/data/3.0/onecall?lat=${lat}&lon=${long}&appid=${OPENWEATHERMAP_API_KEY}`)
+    .then((response) => {
+      setWeatherData(response.data)
+    })
+
+}, [lat, long])
+
+return (
+  <div>
+    {weatherData && (
+      <div>
+        <h3>Weather Information</h3>
+        <div>Timezone: {weatherData.timezone}</div>
+        {/* Add more weather details as needed */}
+      </div>
+    )}
+  </div>
+)
 }
 
 export default App
