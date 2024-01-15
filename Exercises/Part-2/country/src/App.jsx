@@ -5,6 +5,7 @@ const App = () => {
 
   const [countries, setNewCountries] = useState([])
   const [search, setNewSearch] = useState('')
+  const [selectedCountry, setSelectedCountry] = useState(null)
 
   useEffect(() => {
 
@@ -16,7 +17,9 @@ const App = () => {
 
   },[countries])
 
-
+   const handleShow = (country) => {
+    setSelectedCountry(country)
+   }
 
   const handleSearch = (event) => {
     setNewSearch(event.target.value)
@@ -26,19 +29,20 @@ const App = () => {
     <div>
       <SearchCountry search={search} handleSearch={handleSearch} />
 
-      {search && <DisplayCountry countries={countries} search={search} />}
-
+      {search && <DisplayCountry countries={countries} search={search} handleShow={handleShow}/>}
+      {selectedCountry && <OneCountry arr={[selectedCountry]} />}
     </div>
   )
 }
 
-const Parts = ({arr}) => {
+const Parts = ({arr, handleShow}) => {
   return (
     <div>
       <ul>
         {arr.map(country => (
           <li key = {country.name.official}>
             {country.name.common}
+            <button onClick={() => handleShow(country)}>show</button>
           </li>
         ))}
       </ul>
@@ -46,7 +50,7 @@ const Parts = ({arr}) => {
   )
 }
 
-const DisplayCountry = ({countries, search}) => {
+const DisplayCountry = ({countries, search, handleShow}) => {
   const arr = countries.filter(country => country.name.common.toLowerCase().includes(search.toLowerCase()));
   
   if(arr.length > 10)
@@ -65,7 +69,7 @@ const DisplayCountry = ({countries, search}) => {
   }
   else {
     return (
-    <Parts arr={arr} />
+    <Parts arr={arr} handleShow={handleShow}/>
     )
   }
 }
