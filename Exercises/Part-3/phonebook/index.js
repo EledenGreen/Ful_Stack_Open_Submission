@@ -7,6 +7,7 @@ morgan.token('req-body', (req) => {
     return JSON.stringify(req.body)
 })
 
+
 const requestLogger = (request, response, next) => {
     console.log('Method:', request.method)
     console.log('Path: ', request.path)
@@ -52,8 +53,9 @@ let persons = [
     
 ]
 
-app.get('/', (req, res) => {
-    res.json(persons)
+
+app.get('/', (request, response) => {
+    response.json(persons)
 })
 
 app.get('/api/persons', (request, response) => {
