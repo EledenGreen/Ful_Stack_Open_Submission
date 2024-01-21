@@ -1,4 +1,4 @@
-POST https://backend-v2-nphb.onrender.com/
+POST http://localhost:3001/api/persons
 Content-Type: application/json
 
 {
