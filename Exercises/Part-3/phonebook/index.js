@@ -28,7 +28,7 @@ app.use(express.json())
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :req-body'));
 app.use(requestLogger)
 
-let persons = [
+/*let persons = [
     
         
             { 
@@ -54,7 +54,7 @@ let persons = [
          
     
 ]
-
+*/
 
 /*app.get('/', (request, response) => {
     response.json(persons)
@@ -104,9 +104,15 @@ app.delete('/api/persons/:id', (request, response) => {
     return randomId
 }*/
 
-app.post('/api/persons', (request, response) => {
+app.post('/api/persons', (request, response, next) => {
+    
     const body = request.body
     const nameFound = persons.find(person => person.name === body.name)
+    
+    if(body.content === undefined)
+    {
+        return response.status(400).json({ error: 'content missing' })
+    }
 
     if(!body.name || !body.number) 
     {
@@ -130,17 +136,13 @@ app.post('/api/persons', (request, response) => {
     person.save().then(savedPerson => {
         response.json(savedPerson)
     })
+    .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
-    const body = request.body
+    const {name, number} = request.body
 
-    const person = {
-        name: body.name,
-        number: body.number,
-    }
-
-    Person.findByIdAndUpdate(request.params.id, person, {new: true})
+    Person.findByIdAndUpdate(request.params.id, {name, number}, {new: true, runValidators: true, context: 'query'})
         .then(updatedPerson => {
             response.json(updatedPerson)
         })
