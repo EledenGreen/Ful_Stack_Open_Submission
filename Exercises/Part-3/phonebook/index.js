@@ -61,16 +61,19 @@ let persons = [
 })*/
 
 app.get('/api/persons', (request, response) => {
-    Person.find({}).then(notes => {
-        response.json(notes)
+    Person.find({}).then(person => {
+        response.json(person)
     })
 })
 
 app.get('/info', (request, response) => {
-    const personSize = Object.keys(persons).length
+    /*const personSize = Object.keys(persons).length*/
     const date = new Date()
+    Person.find({}).then(person => 
+        {const personSize = person.length
     const sendSizeDate = `<p>Phonebook has info for ${personSize} people</p> <br/> ${date}`
     response.send(sendSizeDate)
+})
 })
 
 app.get('/api/persons/:id', (request, response) => {
@@ -129,7 +132,7 @@ app.post('/api/persons', (request, response) => {
     })
 })
 
-app.put('/api/notes/:id', (request, response, next) => {
+app.put('/api/persons/:id', (request, response, next) => {
     const body = request.body
 
     const person = {
