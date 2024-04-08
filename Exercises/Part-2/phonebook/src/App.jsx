@@ -119,6 +119,18 @@ const App = () => {
           setUpdateMessage(null)
         }, 1500)
       })
+      .catch(error => {
+        console.log(error.response.data.error)
+
+        setUpdateMessage(
+          `'${error.response.data.error}`
+        )
+        setTimeout(() => {
+          setUpdateMessage(null)
+        },1500)
+      })
+
+      
     }
     setNewName('')
     setNewNumber('')
