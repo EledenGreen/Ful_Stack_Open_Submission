@@ -14,7 +14,16 @@ module.exports = {
   rules: {
     'react-refresh/only-export-components': [
       'warn',
-      { allowConstantExport: true },
+      { allowConstantExport: true }
     ],
+    "react/prop-types": [
+      "error",
+      {
+        ignore: [], // Specify the components you want to ignore
+        customValidators: [], // Specify any custom prop type validators
+        skipUndeclared: true, // Whether to skip prop types validation for undeclared components
+      }
+    ],
+    
   },
 }
