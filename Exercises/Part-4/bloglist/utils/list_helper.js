@@ -66,12 +66,18 @@ const favoriteBlog = (blogs) => {
 
 //------Using lodash library------//
 const mostBlogs = (blogs) => {
+    
+    if(blogs.length === 0)
+        return null
+    else{
     const groupedBlogs = _.groupBy(blogs, 'author')
 
     const maxAuthor = _.maxBy(_.keys(groupedBlogs), (author) => groupedBlogs[author].length)
 
     return {author: maxAuthor, blogs: groupedBlogs[maxAuthor].length}
+    }   
 }
+
 
 module.exports = {
     dummy,
