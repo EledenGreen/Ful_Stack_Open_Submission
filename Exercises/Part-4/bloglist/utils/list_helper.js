@@ -1,3 +1,5 @@
+const _ = require('lodash')
+
 const dummy = (blogs) => {
     return 1
 }
@@ -31,8 +33,49 @@ const favoriteBlog = (blogs) => {
     return blogs[max_i]
 }
 
+//-------Generic Approach-----------//
+/*const mostBlogs = (blogs) => {
+    let authorBlogsCount = {}
+
+    for(let blog of blogs)
+    {
+        let author = blog.author
+
+        if(authorBlogsCount[author])
+        {
+            authorBlogsCount[author]++
+        }
+        else{
+            authorBlogsCount[author] = 1
+        }
+    }
+
+    let maxAuthor = null, maxBlogs = 0
+
+    for(let author in authorBlogsCount)
+    {
+        if(authorBlogsCount[author] > maxBlogs)
+        {
+            maxAuthor = author
+            maxBlogs = authorBlogsCount[author]
+        }
+    }
+
+    return {author: maxAuthor, blogs: maxBlogs}
+}*/
+
+//------Using lodash library------//
+const mostBlogs = (blogs) => {
+    const groupedBlogs = _.groupBy(blogs, 'author')
+
+    const maxAuthor = _.maxBy(_.keys(groupedBlogs), (author) => groupedBlogs[author].length)
+
+    return {author: maxAuthor, blogs: groupedBlogs[maxAuthor].length}
+}
+
 module.exports = {
     dummy,
     totalLikes,
-    favoriteBlog
+    favoriteBlog,
+    mostBlogs
 }
