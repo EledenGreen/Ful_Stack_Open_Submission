@@ -6,6 +6,17 @@ const listWithOneBlog = [
     title: 'Go To Statement Considered Harmful',
     author: 'Edsger W. Dijkstra',
     url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
+    likes: 5,
+    __v: 0
+  }
+]
+
+const listWithNoTitle = [
+  {
+    _id: '5a422aa71b54a676234d17f8',
+    author: 'Edsger W. Dijkstra',
+    url: 'https://homepages.cwi.nl/~storm/teaching/reader/Dijkstra68.pdf',
+    likes: 5,
     __v: 0
   }
 ]
@@ -57,5 +68,6 @@ const blogsInDb = async () => {
 module.exports = {
     initialBlogs,
     blogsInDb,
-    listWithOneBlog
+    listWithOneBlog,
+    listWithNoTitle
 }

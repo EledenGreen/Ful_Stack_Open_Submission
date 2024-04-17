@@ -50,7 +50,7 @@ test('a new blog can be added using POST', async () => {
     assert(response.includes('Go To Statement Considered Harmful'))
 })
 
-test.only('presence of "likes" property is tested in a POST request', async () => {
+test('presence of "likes" property is tested in a POST request', async () => {
     const content = helper.listWithOneBlog
 
     if('likes' in content[0])
@@ -67,6 +67,18 @@ test.only('presence of "likes" property is tested in a POST request', async () =
     console.log('defaulting to 0')
     assert.strictEqual(response.body.likes, 0)
     }
+})
+
+test.only('title or url is missing', async () => {
+    const content = helper.listWithNoTitle[0]
+
+    const response = await api
+    .post('/api/blogs')
+    .send(content)
+    .expect(400)
+
+    console.log(response.status)
+    assert.strictEqual(response.status, 400)
 })
 
 after(async () => {
