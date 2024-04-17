@@ -30,11 +30,11 @@ test('unique identifier is "id" not "_id" ', async () => {
     const contents = await api.get('/api/blogs')
 
     for(let blog of contents.body)
-        if ('id' in blog && !('_id' in blog)) console.log('id')
-
+        {assert.ok('id' in blog)
+        assert.ok(!('_id' in blog))}
 })
 
-test.only('a new blog can be added using POST', async () => {
+test('a new blog can be added using POST', async () => {
     const content = helper.listWithOneBlog
     console.log(content)
     await api
@@ -48,6 +48,25 @@ test.only('a new blog can be added using POST', async () => {
 
     assert.strictEqual(blogsAtEnd.body.length, helper.initialBlogs.length + 1)
     assert(response.includes('Go To Statement Considered Harmful'))
+})
+
+test.only('presence of "likes" property is tested in a POST request', async () => {
+    const content = helper.listWithOneBlog
+
+    if('likes' in content[0])
+        console.log('contains likes')
+
+    const response = await api
+    .post('/api/blogs')
+    .send(content)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+    if(!('likes' in content[0])) 
+    {
+    console.log('defaulting to 0')
+    assert.strictEqual(response.body.likes, 0)
+    }
 })
 
 after(async () => {
