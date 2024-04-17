@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node --test",
-    "dev": "node --watch index.js",
+    "test": "NODE_ENV=test node --test",
+    "dev": "NODE_ENV=development node --watch index.js",
     "lint": "eslint ."
   },
   "author": "",
@@ -15,7 +15,11 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "lodash": "^4.17.21",
-    "mongoose": "^8.3.1",
+    "mongoose": "^8.3.2",
     "morgan": "^1.10.0"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "supertest": "^6.3.4"
   }
 }
