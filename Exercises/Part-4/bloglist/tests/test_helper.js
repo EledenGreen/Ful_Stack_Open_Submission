@@ -1,5 +1,9 @@
 const Blog = require('../models/blog')
 
+const blogToPatch = {
+  likes: 10
+}
+
 const listWithOneBlog = [
   {
     _id: '5a422aa71b54a676234d17f8',
@@ -69,5 +73,6 @@ module.exports = {
     initialBlogs,
     blogsInDb,
     listWithOneBlog,
-    listWithNoTitle
+    listWithNoTitle,
+    blogToPatch
 }
