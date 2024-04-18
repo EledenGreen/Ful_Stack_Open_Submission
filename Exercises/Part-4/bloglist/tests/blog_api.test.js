@@ -81,7 +81,7 @@ test('title or url is missing', async () => {
     assert.strictEqual(response.status, 400)
 })
 
-test.only('deleting a specified blog by id', async () => {
+test('deleting a specified blog by id', async () => {
     const blogsAtStart = await helper.blogsInDb()
     const blogToDelete = blogsAtStart[0]
 
@@ -92,6 +92,26 @@ test.only('deleting a specified blog by id', async () => {
     const blogsAtEnd = await helper.blogsInDb()
 
     assert.strictEqual(blogsAtEnd.length, blogsAtStart.length - 1)
+})
+
+test.only('updating only likes value', async () => {
+    const patch = helper.blogToPatch
+    console.log(patch)
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToUpdate = blogsAtStart[0]
+    console.log(blogToUpdate)
+
+    const response = await api
+        .patch(`/api/blogs/${blogToUpdate.id}`)
+        .send(patch)
+        .expect(200)
+        console.log('api response', response.body)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    const updatedBlog = blogsAtEnd[0]
+    console.log(updatedBlog)
+
+    assert.strictEqual(updatedBlog.likes, 10)
 })
 
 after(async () => {
