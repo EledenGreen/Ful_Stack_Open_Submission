@@ -69,7 +69,7 @@ test('presence of "likes" property is tested in a POST request', async () => {
     }
 })
 
-test.only('title or url is missing', async () => {
+test('title or url is missing', async () => {
     const content = helper.listWithNoTitle[0]
 
     const response = await api
@@ -79,6 +79,19 @@ test.only('title or url is missing', async () => {
 
     console.log(response.status)
     assert.strictEqual(response.status, 400)
+})
+
+test.only('deleting a specified blog by id', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    await api
+        .delete(`/api/blogs/${blogToDelete.id}`)
+        .expect(204)
+    
+    const blogsAtEnd = await helper.blogsInDb()
+
+    assert.strictEqual(blogsAtEnd.length, blogsAtStart.length - 1)
 })
 
 after(async () => {
