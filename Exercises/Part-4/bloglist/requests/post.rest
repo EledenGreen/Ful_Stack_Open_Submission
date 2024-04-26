@@ -1,9 +1,10 @@
-POST http://localhost:3000/blogs
+POST http://localhost:3003/api/blogs
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkxPTCB6ZWQiLCJpZCI6IjY2MmIzOWMyNjk5MWU4ZjU2ZWNhMzA4YSIsImlhdCI6MTcxNDEzMTA0OSwiZXhwIjoxNzE0MTM0NjQ5fQ.HvdFPR2wzPitP1_vTA9cph6OctEcp2JpiCxQ_1glYkE
 Content-Type: application/json
 
 {
-      "title": "React patterns",
-      "author": "Michael Chan",
+      "title": "blog 1 using token",
+      "author": "zed",
       "url": "https://reactpatterns.com/",
       "likes": 7
 }

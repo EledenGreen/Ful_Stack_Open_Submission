@@ -1,2 +1,0 @@
-delete http://localhost:3003/api/users/662b38462cf8d00743c6df51
-Content-Type: application/json
