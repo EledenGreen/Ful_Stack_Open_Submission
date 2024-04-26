@@ -1,4 +1,5 @@
 const Blog = require('../models/blog')
+const User = require('../models/user')
 
 const blogToPatch = {
   likes: 10
@@ -69,10 +70,16 @@ const blogsInDb = async () => {
     return blogs.map(blog => blog.toJSON())
 }
 
+const usersInDb = async () => {
+  const users = await User.find({})
+  return users.map(u => u.toJSON())
+}
+
 module.exports = {
     initialBlogs,
     blogsInDb,
     listWithOneBlog,
     listWithNoTitle,
-    blogToPatch
+    blogToPatch,
+    usersInDb
 }
