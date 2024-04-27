@@ -9,7 +9,7 @@ blogsRouter.get('/', async (request, response) => {
         response.json(blogs)
     })
 
-blogsRouter.post('/', middleware.userExtractor, async (request, response,) => {
+blogsRouter.post('/', middleware.tokenExtractor, middleware.userExtractor, async (request, response,) => {
     const body = request.body
 
     const user = request.user
@@ -36,7 +36,7 @@ blogsRouter.post('/', middleware.userExtractor, async (request, response,) => {
     }
 })
 
-blogsRouter.delete('/:id', middleware.userExtractor, async (request, response) => {
+blogsRouter.delete('/:id', middleware.tokenExtractor, middleware.userExtractor, async (request, response) => {
     const blogId = request.params.id
 
     const user = request.user

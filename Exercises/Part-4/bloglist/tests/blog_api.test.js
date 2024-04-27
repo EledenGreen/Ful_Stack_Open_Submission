@@ -124,6 +124,17 @@ test('updating only likes value', async () => {
     assert.strictEqual(updatedBlog.likes, 10)
 })
 
+test('addition of blog without token fails', async() => {
+    const content = helper.listWithOneBlog[0]
+
+    const response = await api
+        .post('/api/blogs')
+        .set({ Authorization: `Bearer ` })
+        .send(content)
+        .expect(401)
+        .expect('Content-type', /application\/json/)
+})
+
 after(async () => {
     await mongoose.connection.close()
 })

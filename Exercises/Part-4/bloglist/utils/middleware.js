@@ -33,6 +33,10 @@ const tokenExtractor = async (request, response, next) => {
         const token = await authorization.replace('Bearer ', '')
         request.token =  token
     }
+    else if(!authorization || !(authorization.startsWith('Bearer '))) {
+        return response.status(401).json({ error: 'Unauthorized'}).end()
+    }
+
     next()
 }
 
