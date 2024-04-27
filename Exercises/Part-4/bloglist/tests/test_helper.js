@@ -1,5 +1,6 @@
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const jwt = require('jsonwebtoken')
 
 const blogToPatch = {
   likes: 10
@@ -65,6 +66,14 @@ const initialBlogs = [
     }  
   ]
 
+const userForToken = {
+  username: "root",
+  password: "sekret",
+  id: '662b861bb6353d69ec4ff028'
+}
+
+const token = jwt.sign(userForToken, process.env.SECRET, { expiresIn: 60*60 })
+
 const blogsInDb = async () => {
     const blogs = await Blog.find({})
     return blogs.map(blog => blog.toJSON())
@@ -81,5 +90,7 @@ module.exports = {
     listWithOneBlog,
     listWithNoTitle,
     blogToPatch,
-    usersInDb
+    usersInDb,
+    userForToken,
+    token
 }

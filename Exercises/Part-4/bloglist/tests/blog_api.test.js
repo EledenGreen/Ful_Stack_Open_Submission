@@ -35,13 +35,19 @@ test('unique identifier is "id" not "_id" ', async () => {
 })
 
 test('a new blog can be added using POST', async () => {
-    const content = helper.listWithOneBlog
-    console.log(content)
-    await api
+    const content = helper.listWithOneBlog[0]
+    console.log('Token', helper.token)
+
+    const temp = await api
     .post('/api/blogs')
+    .set({ Authorization: `Bearer ${helper.token}`})
     .send(content)
     .expect(201)
     .expect('Content-type', /application\/json/)
+
+    console.log('POST response', temp.status, temp.statusType)
+    console.log('Response body', temp.body)
+    
 
     const blogsAtEnd = await api.get('/api/blogs')
     const response = blogsAtEnd.body.map(r => r.title)
