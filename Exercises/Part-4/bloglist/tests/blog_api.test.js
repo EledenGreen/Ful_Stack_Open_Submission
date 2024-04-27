@@ -57,18 +57,20 @@ test('a new blog can be added using POST', async () => {
 })
 
 test('presence of "likes" property is tested in a POST request', async () => {
-    const content = helper.listWithOneBlog
-
-    if('likes' in content[0])
+    console.log(helper.listWithOneBlog[0])
+    const content = helper.listWithOneBlog[0]
+    //console.log('content', content)
+    if('likes' in content)
         console.log('contains likes')
 
     const response = await api
     .post('/api/blogs')
+    .set({ Authorization: `Bearer ${helper.token}` })
     .send(content)
     .expect(201)
-    .expect('Content-Type', /application\/json/)
+    .expect('Content-type', /application\/json/)
 
-    if(!('likes' in content[0])) 
+    if(!('likes' in content)) 
     {
     console.log('defaulting to 0')
     assert.strictEqual(response.body.likes, 0)
@@ -80,6 +82,7 @@ test('title or url is missing', async () => {
 
     const response = await api
     .post('/api/blogs')
+    .set({ Authorization: `Bearer ${helper.token}` })
     .send(content)
     .expect(400)
 
@@ -93,6 +96,7 @@ test('deleting a specified blog by id', async () => {
 
     await api
         .delete(`/api/blogs/${blogToDelete.id}`)
+        .set({ Authorization: `Bearer ${helper.token}` })
         .expect(204)
     
     const blogsAtEnd = await helper.blogsInDb()
@@ -100,7 +104,7 @@ test('deleting a specified blog by id', async () => {
     assert.strictEqual(blogsAtEnd.length, blogsAtStart.length - 1)
 })
 
-test.only('updating only likes value', async () => {
+test('updating only likes value', async () => {
     const patch = helper.blogToPatch
     console.log(patch)
     const blogsAtStart = await helper.blogsInDb()

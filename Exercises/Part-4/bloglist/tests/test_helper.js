@@ -32,13 +32,15 @@ const initialBlogs = [
       title: "React patterns",
       author: "Michael Chan",
       url: "https://reactpatterns.com/",
-      likes: 7
+      likes: 7,
+      user: '662b861bb6353d69ec4ff028'
     },
     {
       title: "Go To Statement Considered Harmful",
       author: "Edsger W. Dijkstra",
       url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
-      likes: 5
+      likes: 5,
+      user: '662b861bb6353d69ec4ff028'
     },
     {
       title: "Canonical string reduction",
