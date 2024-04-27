@@ -1,9 +1,9 @@
 POST http://localhost:3003/api/blogs
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkxPTCB6ZWQiLCJpZCI6IjY2MmIzOWMyNjk5MWU4ZjU2ZWNhMzA4YSIsImlhdCI6MTcxNDEzMTA0OSwiZXhwIjoxNzE0MTM0NjQ5fQ.HvdFPR2wzPitP1_vTA9cph6OctEcp2JpiCxQ_1glYkE
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IkxPTCB6ZWQiLCJpZCI6IjY2MmIzOWMyNjk5MWU4ZjU2ZWNhMzA4YSIsImlhdCI6MTcxNDE5MTQ3NywiZXhwIjoxNzE0MTk1MDc3fQ.L-P2MgfhD91L9QH_8NodEKVtA5AMRseQoyHzgNwYhxU
 Content-Type: application/json
 
 {
-      "title": "blog 1 using token",
+      "title": "blog 2 using token via middleware",
       "author": "zed",
       "url": "https://reactpatterns.com/",
       "likes": 7
