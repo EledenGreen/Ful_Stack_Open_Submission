@@ -33,14 +33,14 @@ const initialBlogs = [
       author: "Michael Chan",
       url: "https://reactpatterns.com/",
       likes: 7,
-      user: '662b861bb6353d69ec4ff028'
+      user: '662daae10d4c31cad668c2a3'
     },
     {
       title: "Go To Statement Considered Harmful",
       author: "Edsger W. Dijkstra",
       url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
       likes: 5,
-      user: '662b861bb6353d69ec4ff028'
+      user: '662daae10d4c31cad668c2a3'
     },
     {
       title: "Canonical string reduction",
@@ -71,7 +71,7 @@ const initialBlogs = [
 const userForToken = {
   username: "root",
   password: "sekret",
-  id: '662b861bb6353d69ec4ff028'
+  id: '662daae10d4c31cad668c2a3'
 }
 
 const token = jwt.sign(userForToken, process.env.SECRET, { expiresIn: 60*60 })

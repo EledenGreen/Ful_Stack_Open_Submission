@@ -13,6 +13,7 @@ blogsRouter.post('/', middleware.tokenExtractor, middleware.userExtractor, async
     const body = request.body
 
     const user = request.user
+    console.log(user)
 
     if(!(body.title) || !(body.url))
     {

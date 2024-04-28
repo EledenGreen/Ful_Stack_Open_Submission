@@ -8,13 +8,16 @@ const app = require('../app')
 const api = supertest(app)
 
 const helper = require('./test_helper')
+const jwt = require('jsonwebtoken')
 
 describe('when there is initially one user in db', () => {
     beforeEach( async () => {
         await User.deleteMany({})
 
-        const passwordHash = await bcrypt.hash('sekret', 10)
-        const user = new User({ username: 'root', passwordHash })
+        const rootUserId = new mongoose.Types.ObjectId('662daae10d4c31cad668c2a3')
+
+        const passwordHash = await bcrypt.hash('userSecret', 10)
+        const user = new User({ username: 'UserRoot', passwordHash, _id: rootUserId })
         
         await user.save()
     })
@@ -27,9 +30,12 @@ describe('when there is initially one user in db', () => {
             name: 'Matti Luukkainen',
             password: 'salainen'
         }
+
+        const token = jwt.sign(newUser, process.env.SECRET, { expiresIn: 60*60 })
         
         await api
             .post('/api/users')
+            .set({ Authorization: `Bearer ${token}`} )
             .send(newUser)
             .expect(201)
             .expect('Content-Type', /application\/json/)
@@ -48,8 +54,11 @@ describe('when there is initially one user in db', () => {
             username: 'a',
         }
 
+        const token = jwt.sign(newUser, process.env.SECRET, { expiresIn: 60*60 })
+
         const result = await api
             .post('/api/users')
+            .set({ Authorization: `Bearer ${token}`})
             .send(newUser)
             .expect(400)
             .expect('Content-Type', /application\/json/)
