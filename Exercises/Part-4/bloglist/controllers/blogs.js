@@ -1,14 +1,19 @@
 const blogsRouter = require('express').Router()
 const { request } = require('../app')
 const Blog = require('../models/blog')
+const middleware = require('../utils/middleware')
+
 
 blogsRouter.get('/', async (request, response) => {
-    const blogs = await Blog.find({}) 
+    const blogs = await Blog.find({}).populate('user', { username: 1, name: 1, id: 1} )
         response.json(blogs)
     })
 
-blogsRouter.post('/', async (request, response,) => {
+blogsRouter.post('/', middleware.tokenExtractor, middleware.userExtractor, async (request, response,) => {
     const body = request.body
+
+    const user = request.user
+    console.log(user)
 
     if(!(body.title) || !(body.url))
     {
@@ -20,17 +25,33 @@ blogsRouter.post('/', async (request, response,) => {
         title: body.title,
         author: body.author,
         url: body.url,
-        likes: body.likes
+        likes: body.likes,
+        user: user.id
     })
 
     const savedBlog = await blog.save()
-            response.status(201).json(savedBlog)
+    user.blogs = user.blogs.concat(savedBlog._id)
+    await user.save()
+
+    response.status(201).json(savedBlog)
     }
 })
 
-blogsRouter.delete('/:id', async (request, response) => {
-    await Blog.findByIdAndDelete(request.params.id)
-    response.status(204).end()
+blogsRouter.delete('/:id', middleware.tokenExtractor, middleware.userExtractor, async (request, response) => {
+    const blogId = request.params.id
+
+    const user = request.user
+
+    const blogContent = await Blog.findById(blogId)
+
+    if(user._id.toString() === blogContent.user._id.toString()) {
+        await Blog.findByIdAndDelete(blogId)
+        response.status(204).end()
+    }
+    else {
+        response.status(400).json({ error: 'user does not match' })
+    }
+
 })
 
 blogsRouter.patch('/:id', async (request, response) => {

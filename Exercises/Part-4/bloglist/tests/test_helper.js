@@ -1,4 +1,6 @@
 const Blog = require('../models/blog')
+const User = require('../models/user')
+const jwt = require('jsonwebtoken')
 
 const blogToPatch = {
   likes: 10
@@ -30,13 +32,15 @@ const initialBlogs = [
       title: "React patterns",
       author: "Michael Chan",
       url: "https://reactpatterns.com/",
-      likes: 7
+      likes: 7,
+      user: '662daae10d4c31cad668c2a3'
     },
     {
       title: "Go To Statement Considered Harmful",
       author: "Edsger W. Dijkstra",
       url: "http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html",
-      likes: 5
+      likes: 5,
+      user: '662daae10d4c31cad668c2a3'
     },
     {
       title: "Canonical string reduction",
@@ -64,9 +68,22 @@ const initialBlogs = [
     }  
   ]
 
+const userForToken = {
+  username: "root",
+  password: "sekret",
+  id: '662daae10d4c31cad668c2a3'
+}
+
+const token = jwt.sign(userForToken, process.env.SECRET, { expiresIn: 60*60 })
+
 const blogsInDb = async () => {
     const blogs = await Blog.find({})
     return blogs.map(blog => blog.toJSON())
+}
+
+const usersInDb = async () => {
+  const users = await User.find({})
+  return users.map(u => u.toJSON())
 }
 
 module.exports = {
@@ -74,5 +91,8 @@ module.exports = {
     blogsInDb,
     listWithOneBlog,
     listWithNoTitle,
-    blogToPatch
+    blogToPatch,
+    usersInDb,
+    userForToken,
+    token
 }
