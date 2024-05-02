@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import Blog from './components/Blog';
 import blogService from './services/blogs';
 import loginService from './services/login';
+import Notification from './components/Notification';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [user, setUser] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [message, setMessage] = useState(null);
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
@@ -48,9 +49,9 @@ const App = () => {
       });
     } 
     catch (exception) {
-      setErrorMessage('Wrong Credentials');
+      setMessage("Wrong username or password");
       setTimeout(() => {
-        setErrorMessage(null);
+        setMessage(null);
       }, 5000);
     }
   }
@@ -88,16 +89,6 @@ const App = () => {
       <button type='submit'>Logout</button>
     </form>
   )
-
-  if (user === null) {
-    return (
-      <div>
-        <h2>Log in to application</h2>
-        {loginForm()}
-
-      </div>
-    )
-  }
 
   const addBlogForm = () => (
     <form onSubmit={addBlog}>
@@ -137,6 +128,10 @@ const App = () => {
       .create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
+        setMessage(`a new blog ${blogObject.title} by ${blogObject.author} added`)
+          setTimeout(() => {
+            setMessage(null)
+          }, 5000)
         setAuthor('')
         setTitle('')
         setUrl('')
@@ -158,9 +153,25 @@ const App = () => {
     setUrl(event.target.value)
   }
 
+
+  if (user === null) {
+    return (
+      <div>
+        <h2>Log in to application</h2>
+        <Notification message={message}/>
+        {loginForm()}
+
+      </div>
+    )
+  }
+
+
   return (
     <div>
+
       <h2>User</h2>
+      <Notification message={message} />
+
       <p> {user.name} logged-in </p>
       {logoutForm()}
 
