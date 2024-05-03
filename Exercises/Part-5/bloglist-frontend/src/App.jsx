@@ -3,6 +3,8 @@ import Blog from './components/Blog';
 import blogService from './services/blogs';
 import loginService from './services/login';
 import Notification from './components/Notification';
+import BlogForm from './components/BlogForm';
+import Toggleable from './components/Togglable';
 
 const App = () => {
   const [blogs, setBlogs] = useState([]);
@@ -90,39 +92,15 @@ const App = () => {
     </form>
   )
 
-  const addBlogForm = () => (
-    <form onSubmit={addBlog}>
-      <div>
-        title
-      <input
-        value={title}
-        onChange={handleTitleChange}
-      />
-      </div>
-      <div>
-        author
-        <input 
-          value={author}
-          onChange={handleAuthorChange} />
-      </div>
-      <div>
-        url
-        <input
-          value={url}
-          onChange={handleUrlChange} />
-      </div>
+  const addBlogForm = () => {
+    return (
+      <Toggleable buttonLabel="new blog" >
+        <BlogForm createBlog={addBlog} />
+      </Toggleable>
+    )
+}
 
-      <button type="submit">create</button>
-    </form>
-  )
-
-  const addBlog = (event) => {
-    event.preventDefault()
-    const blogObject = {
-      title: title,
-      author: author,
-      url: url,
-    }
+  const addBlog = (blogObject) => {
 
     blogService
       .create(blogObject)
@@ -132,25 +110,7 @@ const App = () => {
           setTimeout(() => {
             setMessage(null)
           }, 5000)
-        setAuthor('')
-        setTitle('')
-        setUrl('')
       })
-  }
-
-  const handleTitleChange = (event) => {
-    console.log(event.target.value)
-    setTitle(event.target.value)
-  }
-
-  const handleAuthorChange = (event) => {
-    console.log(event.target.value)
-    setAuthor(event.target.value)
-  }
-
-  const handleUrlChange = (event) => {
-    console.log(event.target.value)
-    setUrl(event.target.value)
   }
 
 
