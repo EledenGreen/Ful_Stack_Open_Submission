@@ -27,10 +27,10 @@ const Blog = ({ blog, handleLikeUpdate }) => {
     {blog.title} {blog.author} 
     <Toggleable buttonLabel='view'>
       <div>
-        <ul>
+        <ul onClick={handleLike}>
           <li>url: {blog.url}</li>
           <li>likes: {blog.likes}
-            <button onClick={handleLike}>like</button>
+            <button type="click">like</button>
           </li>
           <li>username: {blog.user.username}</li>
         </ul>
