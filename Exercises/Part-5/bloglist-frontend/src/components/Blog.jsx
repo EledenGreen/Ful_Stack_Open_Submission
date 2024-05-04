@@ -1,7 +1,7 @@
 import Toggleable from "./Togglable"
 import blogService from "../services/blogs"
 
-const Blog = ({ blog, handleLikeUpdate }) => {
+const Blog = ({ blog, handleLikeUpdate, handleDeleteBlog }) => {
 
   const blogStyle = {
     paddingTop: 10,
@@ -21,20 +21,32 @@ const Blog = ({ blog, handleLikeUpdate }) => {
     }
   }
 
+  const handleDelete = async () => {
+    try {
+      handleDeleteBlog(blog.id)
+    }
+    catch (error) {
+      console.error(error.message)
+    }
+  }
+
+
+
   return (
-  <div style={blogStyle}>
+  <div style={blogStyle} >
     {console.log(blog)}
     {blog.title} {blog.author} 
     <Toggleable buttonLabel='view'>
       <div>
-        <ul onClick={handleLike}>
+        <ul>
           <li>url: {blog.url}</li>
           <li>likes: {blog.likes}
-            <button type="click">like</button>
+            <button onClick={handleLike}>like</button>
           </li>
           <li>username: {blog.user.username}</li>
         </ul>
       </div>
+      <button onClick={handleDelete}>remove</button>
     </Toggleable>
   </div>
   )  

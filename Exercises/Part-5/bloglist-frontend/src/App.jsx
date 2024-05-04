@@ -30,6 +30,23 @@ const App = () => {
     }
   }, []);
 
+  const handleDeleteBlog = (id) => {
+    const blogToRemove = blogs.find((blog) => blog.id === id)
+
+    if (window.confirm(`Delete ${blogToRemove.title} by ${blogToRemove.author} ?`)) {
+      blogService
+        .deleteBlog(id)
+        .then(() => {
+          window.alert('Deleted')
+          blogService
+            .getAll()
+            .then(initialBlogs => {
+              setBlogs(initialBlogs)
+            })
+        })
+    }
+  }
+
   const handleLikeUpdate = (updatedBlog) => {
     setBlogs(blogs.map(b => (b.id === updatedBlog.id ? updatedBlog : b)))
   }
@@ -146,7 +163,7 @@ const App = () => {
       <h2>Blogs</h2>
 
       {blogs.map(blog => 
-        <Blog key={blog.id} blog={blog} handleLikeUpdate={handleLikeUpdate}/>
+        <Blog key={blog.id} blog={blog} handleLikeUpdate={handleLikeUpdate} handleDeleteBlog={handleDeleteBlog}/>
       )}
     </div>
   )
