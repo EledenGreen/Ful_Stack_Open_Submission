@@ -1,6 +1,7 @@
 import Toggleable from "./Togglable"
+import blogService from "../services/blogs"
 
-const Blog = ({ blog }) => {
+const Blog = ({ blog, handleLikeUpdate }) => {
 
   const blogStyle = {
     paddingTop: 10,
@@ -8,6 +9,16 @@ const Blog = ({ blog }) => {
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5
+  }
+
+  const handleLike = async () => {
+    try {
+      const updatedBlog = await blogService.addLike(blog)
+      handleLikeUpdate(updatedBlog)
+    }
+    catch (error) {
+      console.error(error.message)
+    }
   }
 
   return (
@@ -19,7 +30,7 @@ const Blog = ({ blog }) => {
         <ul>
           <li>url: {blog.url}</li>
           <li>likes: {blog.likes}
-            <button>like</button>
+            <button onClick={handleLike}>like</button>
           </li>
           <li>username: {blog.user.username}</li>
         </ul>

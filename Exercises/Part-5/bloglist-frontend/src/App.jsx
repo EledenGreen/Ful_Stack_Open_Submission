@@ -29,6 +29,10 @@ const App = () => {
     }
   }, []);
 
+  const handleLikeUpdate = (updatedBlog) => {
+    setBlogs(blogs.map(b => (b.id === updatedBlog.id ? updatedBlog : b)))
+  }
+
   const handleLogin = async (event) => {
     event.preventDefault();
 
@@ -98,7 +102,7 @@ const App = () => {
         <BlogForm createBlog={addBlog} />
       </Toggleable>
     )
-}
+  }
 
   const addBlog = (blogObject) => {
 
@@ -141,7 +145,7 @@ const App = () => {
       <h2>Blogs</h2>
 
       {blogs.map(blog => 
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} handleLikeUpdate={handleLikeUpdate}/>
       )}
     </div>
   )

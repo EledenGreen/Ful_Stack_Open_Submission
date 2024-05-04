@@ -74,5 +74,22 @@ blogsRouter.patch('/:id', async (request, response) => {
     }
 })
 
+blogsRouter.put('/:id', async (request, response) => {
+    try {
+        const body = request.body
+
+        const blog = {
+            likes: body.likes
+        }
+
+        const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
+        
+        response.json(updatedBlog)
+    }
+    catch (error) {
+        response.status(500).json({ error: 'Server error'})
+    }
+})
+
 
 module.exports = blogsRouter
