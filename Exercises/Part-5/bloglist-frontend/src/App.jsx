@@ -16,13 +16,14 @@ const App = () => {
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
+  blogs.sort((a, b) => b.likes - a.likes)
+
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser');
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON);
       setUser(user);
       blogService.setToken(user.token);
-
       blogService.getAll().then(initialBlogs => {
         setBlogs(initialBlogs);
       });
