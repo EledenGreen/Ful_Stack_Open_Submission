@@ -1,58 +1,82 @@
-import React, { useState, useEffect } from 'react';
-import Blog from './components/Blog';
-import blogService from './services/blogs';
-import loginService from './services/login';
-import Notification from './components/Notification';
+import React, { useState, useEffect } from 'react'
+import Blog from './components/Blog'
+import blogService from './services/blogs'
+import loginService from './services/login'
+import Notification from './components/Notification'
+import BlogForm from './components/BlogForm'
+import Toggleable from './components/Togglable'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([]);
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [user, setUser] = useState(null);
-  const [message, setMessage] = useState(null);
+  const [blogs, setBlogs] = useState([])
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [user, setUser] = useState(null)
+  const [message, setMessage] = useState(null)
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [url, setUrl] = useState('')
 
-  useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser');
-    if (loggedUserJSON) {
-      const user = JSON.parse(loggedUserJSON);
-      setUser(user);
-      blogService.setToken(user.token);
+  blogs.sort((a, b) => b.likes - a.likes)
 
+  useEffect(() => {
+    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+    if (loggedUserJSON) {
+      const user = JSON.parse(loggedUserJSON)
+      setUser(user)
+      blogService.setToken(user.token)
       blogService.getAll().then(initialBlogs => {
-        setBlogs(initialBlogs);
-      });
+        setBlogs(initialBlogs)
+      })
     }
-  }, []);
+  }, [])
+
+  const handleDeleteBlog = (id) => {
+    const blogToRemove = blogs.find((blog) => blog.id === id)
+
+    if (window.confirm(`Delete ${blogToRemove.title} by ${blogToRemove.author} ?`)) {
+      blogService
+        .deleteBlog(id)
+        .then(() => {
+          window.alert('Deleted')
+          blogService
+            .getAll()
+            .then(initialBlogs => {
+              setBlogs(initialBlogs)
+            })
+        })
+    }
+  }
+
+  const handleLikeUpdate = (updatedBlog) => {
+    setBlogs(blogs.map(b => (b.id === updatedBlog.id ? updatedBlog : b)))
+  }
 
   const handleLogin = async (event) => {
-    event.preventDefault();
+    event.preventDefault()
 
     try {
       const user = await loginService.login({
         username, password,
-      });
+      })
 
       window.localStorage.setItem(
         'loggedBlogappUser', JSON.stringify(user)
-      );
+      )
 
-      blogService.setToken(user.token);
-      setUser(user);
-      setUsername('');
-      setPassword('');
+      blogService.setToken(user.token)
+      setUser(user)
+      setUsername('')
+      setPassword('')
 
       blogService.getAll().then(initialBlogs => {
-        setBlogs(initialBlogs);
-      });
-    } 
+        setBlogs(initialBlogs)
+      })
+    }
     catch (exception) {
-      setMessage("Wrong username or password");
+      setMessage('Wrong username or password')
       setTimeout(() => {
-        setMessage(null);
-      }, 5000);
+        setMessage(null)
+      }, 5000)
     }
   }
 
@@ -90,67 +114,25 @@ const App = () => {
     </form>
   )
 
-  const addBlogForm = () => (
-    <form onSubmit={addBlog}>
-      <div>
-        title
-      <input
-        value={title}
-        onChange={handleTitleChange}
-      />
-      </div>
-      <div>
-        author
-        <input 
-          value={author}
-          onChange={handleAuthorChange} />
-      </div>
-      <div>
-        url
-        <input
-          value={url}
-          onChange={handleUrlChange} />
-      </div>
+  const addBlogForm = () => {
+    return (
+      <Toggleable buttonLabel="new blog" >
+        <BlogForm createBlog={addBlog} />
+      </Toggleable>
+    )
+  }
 
-      <button type="submit">create</button>
-    </form>
-  )
-
-  const addBlog = (event) => {
-    event.preventDefault()
-    const blogObject = {
-      title: title,
-      author: author,
-      url: url,
-    }
+  const addBlog = (blogObject) => {
 
     blogService
       .create(blogObject)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
         setMessage(`a new blog ${blogObject.title} by ${blogObject.author} added`)
-          setTimeout(() => {
-            setMessage(null)
-          }, 5000)
-        setAuthor('')
-        setTitle('')
-        setUrl('')
+        setTimeout(() => {
+          setMessage(null)
+        }, 5000)
       })
-  }
-
-  const handleTitleChange = (event) => {
-    console.log(event.target.value)
-    setTitle(event.target.value)
-  }
-
-  const handleAuthorChange = (event) => {
-    console.log(event.target.value)
-    setAuthor(event.target.value)
-  }
-
-  const handleUrlChange = (event) => {
-    console.log(event.target.value)
-    setUrl(event.target.value)
   }
 
 
@@ -181,10 +163,10 @@ const App = () => {
       <h2>Blogs</h2>
 
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} handleLikeUpdate={handleLikeUpdate} handleDeleteBlog={handleDeleteBlog} user={user}/>
       )}
     </div>
   )
 }
 
-export default App;
+export default App

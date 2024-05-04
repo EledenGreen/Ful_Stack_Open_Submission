@@ -1,6 +1,7 @@
 const blogsRouter = require('express').Router()
 const { request } = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const middleware = require('../utils/middleware')
 
 
@@ -71,6 +72,22 @@ blogsRouter.patch('/:id', async (request, response) => {
     } catch (error) {
         console.error('Error updating blog:', error)
         response.status(500).json({ error: 'Server error' })
+    }
+})
+
+blogsRouter.put('/:id', async (request, response) => {
+    try {
+        const body = request.body
+        console.log('backend before', body)
+        const blog = {
+            likes: body.likes,
+        }
+
+        const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true }).populate('user')
+        response.json(updatedBlog)
+    }
+    catch (error) {
+        response.status(500).json({ error: 'Server error'})
     }
 })
 
