@@ -1,7 +1,7 @@
 import Toggleable from "./Togglable"
 import blogService from "../services/blogs"
 
-const Blog = ({ blog, handleLikeUpdate, handleDeleteBlog }) => {
+const Blog = ({ blog, handleLikeUpdate, handleDeleteBlog , user}) => {
 
   const blogStyle = {
     paddingTop: 10,
@@ -10,6 +10,12 @@ const Blog = ({ blog, handleLikeUpdate, handleDeleteBlog }) => {
     borderWidth: 1,
     marginBottom: 5
   }
+
+
+    const deleteStyle = {
+      display: (blog.user.id === user.id) ? '' : 'none'
+    }
+  
 
   const handleLike = async () => {
     try {
@@ -46,7 +52,7 @@ const Blog = ({ blog, handleLikeUpdate, handleDeleteBlog }) => {
           <li>username: {blog.user.username}</li>
         </ul>
       </div>
-      <button onClick={handleDelete}>remove</button>
+      <button style={deleteStyle} onClick={handleDelete}>remove</button>
     </Toggleable>
   </div>
   )  
