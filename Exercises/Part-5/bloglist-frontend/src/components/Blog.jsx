@@ -1,7 +1,7 @@
-import Toggleable from "./Togglable"
-import blogService from "../services/blogs"
+import Toggleable from './Togglable'
+import blogService from '../services/blogs'
 
-const Blog = ({ blog, handleLikeUpdate, handleDeleteBlog , user}) => {
+const Blog = ({ blog, handleLikeUpdate, handleDeleteBlog , user }) => {
 
   const blogStyle = {
     paddingTop: 10,
@@ -12,10 +12,10 @@ const Blog = ({ blog, handleLikeUpdate, handleDeleteBlog , user}) => {
   }
 
 
-    const deleteStyle = {
-      display: (blog.user.id === user.id) ? '' : 'none'
-    }
-  
+  const deleteStyle = {
+    display: (blog.user.id === user.id) ? '' : 'none'
+  }
+
 
   const handleLike = async () => {
     try {
@@ -39,23 +39,23 @@ const Blog = ({ blog, handleLikeUpdate, handleDeleteBlog , user}) => {
 
 
   return (
-  <div style={blogStyle} >
-    {console.log(blog)}
-    {blog.title} {blog.author} 
-    <Toggleable buttonLabel='view'>
-      <div>
-        <ul>
-          <li>url: {blog.url}</li>
-          <li>likes: {blog.likes}
-            <button onClick={handleLike}>like</button>
-          </li>
-          <li>username: {blog.user.username}</li>
-        </ul>
-      </div>
-      <button style={deleteStyle} onClick={handleDelete}>remove</button>
-    </Toggleable>
-  </div>
-  )  
+    <div style={blogStyle} >
+      {console.log(blog)}
+      {blog.title} {blog.author}
+      <Toggleable buttonLabel='view'>
+        <div>
+          <ul>
+            <li>url: {blog.url}</li>
+            <li>likes: {blog.likes}
+              <button onClick={handleLike}>like</button>
+            </li>
+            <li>username: {blog.user.username}</li>
+          </ul>
+        </div>
+        <button style={deleteStyle} onClick={handleDelete}>remove</button>
+      </Toggleable>
+    </div>
+  )
 }
 
 export default Blog
