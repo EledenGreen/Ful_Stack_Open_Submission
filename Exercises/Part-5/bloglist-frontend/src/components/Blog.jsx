@@ -3,6 +3,8 @@ import blogService from '../services/blogs'
 
 const Blog = ({ blog, handleLikeUpdate, handleDeleteBlog , user }) => {
 
+  console.log('delete test', blog)
+
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -14,17 +16,6 @@ const Blog = ({ blog, handleLikeUpdate, handleDeleteBlog , user }) => {
 
   const deleteStyle = {
     display: (blog.user.id === user.id) ? '' : 'none'
-  }
-
-
-  const handleLike = async () => {
-    try {
-      const updatedBlog = await blogService.addLike(blog)
-      handleLikeUpdate(updatedBlog)
-    }
-    catch (error) {
-      console.error(error.message)
-    }
   }
 
   const handleDelete = async () => {
@@ -42,12 +33,12 @@ const Blog = ({ blog, handleLikeUpdate, handleDeleteBlog , user }) => {
     <div style={blogStyle} >
       {console.log(blog)}
       {blog.title} {blog.author}
-      <Toggleable buttonLabel='view'>
+      <Toggleable buttonLabel='view' >
         <div>
           <ul>
             <li>url: {blog.url}</li>
             <li>likes: {blog.likes}
-              <button onClick={handleLike}>like</button>
+              <button onClick={() => handleLikeUpdate(blog)}>like</button>
             </li>
             <li>username: {blog.user.username}</li>
           </ul>
