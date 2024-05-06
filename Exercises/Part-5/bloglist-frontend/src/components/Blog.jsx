@@ -3,6 +3,8 @@ import blogService from '../services/blogs'
 
 const Blog = ({ blog, handleLikeUpdate, handleDeleteBlog , user }) => {
 
+  console.log('delete test', blog)
+
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
