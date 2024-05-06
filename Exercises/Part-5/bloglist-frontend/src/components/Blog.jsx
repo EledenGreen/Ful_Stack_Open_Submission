@@ -44,7 +44,7 @@ const Blog = ({ blog, handleLikeUpdate, handleDeleteBlog , user }) => {
     <div style={blogStyle} >
       {console.log(blog)}
       {blog.title} {blog.author}
-      <Toggleable buttonLabel='view'>
+      <Toggleable buttonLabel='view' >
         <div>
           <ul>
             <li>url: {blog.url}</li>
