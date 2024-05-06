@@ -18,17 +18,6 @@ const Blog = ({ blog, handleLikeUpdate, handleDeleteBlog , user }) => {
     display: (blog.user.id === user.id) ? '' : 'none'
   }
 
-
-  const handleLike = async () => {
-    try {
-      const updatedBlog = await blogService.addLike(blog)
-      handleLikeUpdate(updatedBlog)
-    }
-    catch (error) {
-      console.error(error.message)
-    }
-  }
-
   const handleDelete = async () => {
     try {
       handleDeleteBlog(blog.id)
@@ -49,7 +38,7 @@ const Blog = ({ blog, handleLikeUpdate, handleDeleteBlog , user }) => {
           <ul>
             <li>url: {blog.url}</li>
             <li>likes: {blog.likes}
-              <button onClick={handleLike}>like</button>
+              <button onClick={() => handleLikeUpdate(blog)}>like</button>
             </li>
             <li>username: {blog.user.username}</li>
           </ul>
