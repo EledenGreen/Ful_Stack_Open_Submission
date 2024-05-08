@@ -57,6 +57,42 @@ describe('Blog app', () => {
 
             await page.getByText('a new blog E2E test 1 by zed added').isVisible()
         })
+
+        test('a blog can be edited such as inc likes', async ({ page })=> {
+            await page.getByRole('button', { name: 'new blog' }).click()
+
+            await page.getByPlaceholder('title').fill('E2E test 1')
+            await page.getByPlaceholder('author').fill('zed')
+            await page.getByPlaceholder('url').fill('local')
+
+            await page.getByRole('button', { name: 'create' }).click()
+
+            await page.getByText('a new blog E2E test 1 by zed added').isVisible()
+
+            await page.getByText('E2E test 1 zed')
+                .getByRole('button', { name: 'view'}).click()
+
+            const likesText = await page.$eval('li.likes', like => like.textContent)
+            const likesValue = parseInt(likesText.replace('likes: ', ''))
+
+            await expect(likesValue,).toEqual(0)
+            console.log(likesValue)
+
+            await page.getByText('E2E test 1 zed')
+                .getByRole('button', { name: 'like' }).click()
+
+            await page.waitForFunction(() => {
+                const updatedLikesText = document.querySelector('li.likes').textContent
+                const updatedLikesValue = parseInt(updatedLikesText.replace('likes: ', ''))
+                return updatedLikesValue > 0
+            })
+
+            const updatedLikesText = await page.$eval('li.likes', like => like.textContent)
+            const updatedLikesValue = parseInt(updatedLikesText.replace('likes: ', ''))
+            console.log(updatedLikesValue)
+            
+            expect(updatedLikesValue).toBeGreaterThan(likesValue)
+        })
     })
 
     
