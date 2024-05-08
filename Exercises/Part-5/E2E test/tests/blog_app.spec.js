@@ -39,5 +39,25 @@ describe('Blog app', () => {
         })
     })
 
+    describe('When logged in', () => {
+        beforeEach(async ({ page }) => {
+            await page.getByTestId('username').fill('mluukkai')
+            await page.getByTestId('password').fill('salainen')
+            await page.getByRole('button', { name: 'login' }).click()
+        })
+
+        test('a new blog can be created', async ({ page }) => {
+            await page.getByRole('button', { name: 'new blog' }).click()
+
+            await page.getByPlaceholder('title').fill('E2E test 1')
+            await page.getByPlaceholder('author').fill('zed')
+            await page.getByPlaceholder('url').fill('local')
+
+            await page.getByRole('button', { name: 'create' }).click()
+
+            await page.getByText('a new blog E2E test 1 by zed added').isVisible()
+        })
+    })
+
     
 })
