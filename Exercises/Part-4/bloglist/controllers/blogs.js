@@ -31,10 +31,12 @@ blogsRouter.post('/', middleware.tokenExtractor, middleware.userExtractor, async
     })
 
     const savedBlog = await blog.save()
+    await savedBlog.populate('user')
     user.blogs = user.blogs.concat(savedBlog._id)
     await user.save()
-
+    console.log('Blog POST>>>> ', savedBlog)
     response.status(201).json(savedBlog)
+    
     }
 })
 

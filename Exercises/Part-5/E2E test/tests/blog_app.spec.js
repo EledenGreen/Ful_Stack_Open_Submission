@@ -1,4 +1,5 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
+const exp = require('constants')
 
 describe('Blog app', () => {
     beforeEach(async ({ page, request }) => {
@@ -93,7 +94,34 @@ describe('Blog app', () => {
             
             expect(updatedLikesValue).toBeGreaterThan(likesValue)
         })
-    })
 
     
+
+        test('the user who added can also delete', async ({ page }) => {
+
+            await page.getByRole('button', { name: 'new blog' }).click()
+
+            await page.getByPlaceholder('title').fill('E2E test 2')
+            await page.getByPlaceholder('author').fill('zed')
+            await page.getByPlaceholder('url').fill('local')
+
+            await page.getByRole('button', { name: 'create' }).click()
+
+            await page.waitForSelector('button', { name: 'view'})
+            //deletion
+            await page.getByText('E2E test 2 zed')
+                .getByRole('button', { name: 'view' }).click()
+
+            await page.getByRole('button', { name: 'remove' }).click()
+
+            await page.on('dialog', async dialog => {
+                await dialog.accept()
+            })
+
+            await page.on('dialog', async dialog => {
+                await dialog.accept()
+            })
+        })
+        
+    })
 })
