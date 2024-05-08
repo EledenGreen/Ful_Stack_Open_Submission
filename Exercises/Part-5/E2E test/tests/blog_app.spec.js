@@ -11,6 +11,13 @@ describe('Blog app', () => {
                 password: 'salainen'
             }
         })
+        await request.post('/api/users', {
+            data: {
+                name: 'cannot delete',
+                username: 'cant del',
+                password: 'delete'
+            }
+        })
 
         await page.goto('/')
     })
@@ -121,6 +128,35 @@ describe('Blog app', () => {
             await page.on('dialog', async dialog => {
                 await dialog.accept()
             })
+        })
+
+        test('User who didnt create cannot delete', async ({ page }) => {
+
+            //Authorize Blog creation
+            await page.getByRole('button', { name: 'new blog' }).click()
+
+            await page.getByPlaceholder('title').fill('E2E test 2')
+            await page.getByPlaceholder('author').fill('zed')
+            await page.getByPlaceholder('url').fill('local')
+
+            await page.getByRole('button', { name: 'create' }).click()
+
+            //Logout
+            await page.getByRole('button', { name: 'Logout' }).click()
+
+            //Login different user
+            await page.getByTestId('username').fill('cant del')
+            await page.getByTestId('password').fill('delete')
+            await page.getByRole('button', { name: 'login' }).click()
+            await page.getByText('cannot delete logged-in').isVisible()
+
+            //navigate to the created blog
+            await page.getByText('E2E test 2 zed')
+                .getByRole('button', { name: 'view' })
+            
+            await expect(page.getByRole('button', { name: 'remove' })).not.toBeVisible()
+
+
         })
         
     })
