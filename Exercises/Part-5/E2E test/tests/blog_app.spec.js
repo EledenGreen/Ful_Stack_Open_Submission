@@ -160,38 +160,73 @@ describe('Blog app', () => {
             await expect(page.getByRole('button', { name: 'remove' })).not.toBeVisible()
         })
 
-        describe('List of blogs', () => {
-            beforeEach(async ({ page, request }) => {
-
-                const response = await page.waitForResponse('http://localhost:5173/api/login')
-                const responseData = await response.json()
-                console.log(responseData)
-
-                const authToken  = responseData.token
-
-                for (let blog of helper.initialBlogs) {
-                    const res = await request.post('/api/blogs', {
-
-                        headers: {
-                            'Authorization': `Bearer ${authToken}`
-                        },
-
-                        data: {
-                            title: blog.title,
-                            author: blog.author,
-                            url: blog.url,
-                            likes: blog.likes
-                        }
-                    })
-                    console.log(res)
-                }
-            })
-
-            test('Sorted list of blogs', async ({ page }) => {
-                await expect(1).toEqual(1)
-            })
-        })
+        
     })
 
 })
 
+
+describe('List of blogs', () => {
+    beforeEach(async ({ page, request }) => {
+
+        await request.post('/api/testing/reset')
+        await request.post('/api/users', {
+            data: {
+                name: 'Matti Luukkainen',
+                username: 'mluukkai',
+                password: 'salainen'
+            }
+        })
+        await page.goto('/')
+
+        await page.getByTestId('username').fill('mluukkai')
+        await page.getByTestId('password').fill('salainen')
+        await page.getByRole('button', { name: 'login' }).click()
+
+        const response = await page.waitForResponse('http://localhost:5173/api/login')
+        const responseData = await response.json()
+        console.log(responseData)
+
+        const authToken  = responseData.token
+
+        for (let blog of helper.initialBlogs) {
+            const res = await request.post('/api/blogs', {
+
+                headers: {
+                    'Authorization': `Bearer ${authToken}`
+                },
+
+                data: {
+                    title: blog.title,
+                    author: blog.author,
+                    url: blog.url,
+                    likes: blog.likes
+                }
+            })
+
+            console.log(res)
+        }
+        await page.reload()
+    })
+
+    test('Sorted list of blogs', async ({ page }) => {
+
+        //await page.waitForResponse('http://localhost:5173/api/blogs')
+        await page.waitForSelector('div.blogTest')
+
+        const divBlogs = await page.$$('div.blogTest')
+        
+        const likesArray = []
+        //console.log('|||||||||||||||||', divBlogs)
+        for (const blog of divBlogs) { //each blog is a <div> element
+            console.log('inside For +++++++++++')
+
+            const likesValue = await blog.$eval('li.likes', like => parseInt(like.textContent.replace('likes: ', '')))
+
+            console.log('current value', likesValue)
+            likesArray.push(likesValue)
+        }
+        console.log(likesArray)
+        expect(likesArray).toEqual([12, 10, 7, 5, 2, 0])
+    })
+})

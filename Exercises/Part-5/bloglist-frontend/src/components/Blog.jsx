@@ -30,7 +30,7 @@ const Blog = ({ blog, handleLikeUpdate, handleDeleteBlog , user }) => {
 
 
   return (
-    <div style={blogStyle} >
+    <div style={blogStyle} className='blogTest'>
       {console.log(blog)}
       {blog.title} {blog.author}
       <Toggleable buttonLabel='view' >
