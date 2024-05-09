@@ -1,5 +1,6 @@
 const { test, expect, beforeEach, describe } = require('@playwright/test')
 const exp = require('constants')
+const helper = require('./helper')
 
 describe('Blog app', () => {
     beforeEach(async ({ page, request }) => {
@@ -52,9 +53,11 @@ describe('Blog app', () => {
             await page.getByTestId('username').fill('mluukkai')
             await page.getByTestId('password').fill('salainen')
             await page.getByRole('button', { name: 'login' }).click()
+
         })
 
         test('a new blog can be created', async ({ page }) => {
+
             await page.getByRole('button', { name: 'new blog' }).click()
 
             await page.getByPlaceholder('title').fill('E2E test 1')
@@ -83,7 +86,7 @@ describe('Blog app', () => {
             const likesText = await page.$eval('li.likes', like => like.textContent)
             const likesValue = parseInt(likesText.replace('likes: ', ''))
 
-            await expect(likesValue,).toEqual(0)
+            await expect(likesValue).toEqual(0)
             console.log(likesValue)
 
             await page.getByText('E2E test 1 zed')
@@ -155,9 +158,40 @@ describe('Blog app', () => {
                 .getByRole('button', { name: 'view' })
             
             await expect(page.getByRole('button', { name: 'remove' })).not.toBeVisible()
-
-
         })
-        
+
+        describe('List of blogs', () => {
+            beforeEach(async ({ page, request }) => {
+
+                const response = await page.waitForResponse('http://localhost:5173/api/login')
+                const responseData = await response.json()
+                console.log(responseData)
+
+                const authToken  = responseData.token
+
+                for (let blog of helper.initialBlogs) {
+                    const res = await request.post('/api/blogs', {
+
+                        headers: {
+                            'Authorization': `Bearer ${authToken}`
+                        },
+
+                        data: {
+                            title: blog.title,
+                            author: blog.author,
+                            url: blog.url,
+                            likes: blog.likes
+                        }
+                    })
+                    console.log(res)
+                }
+            })
+
+            test('Sorted list of blogs', async ({ page }) => {
+                await expect(1).toEqual(1)
+            })
+        })
     })
+
 })
+
