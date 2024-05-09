@@ -30,14 +30,14 @@ const Blog = ({ blog, handleLikeUpdate, handleDeleteBlog , user }) => {
 
 
   return (
-    <div style={blogStyle} >
+    <div style={blogStyle} className='blogTest'>
       {console.log(blog)}
       {blog.title} {blog.author}
       <Toggleable buttonLabel='view' >
         <div>
           <ul>
             <li>url: {blog.url}</li>
-            <li>likes: {blog.likes}
+            <li className='likes'>likes: {blog.likes}
               <button onClick={() => handleLikeUpdate(blog)}>like</button>
             </li>
             <li>username: {blog.user.username}</li>
