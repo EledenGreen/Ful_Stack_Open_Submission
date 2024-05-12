@@ -3,7 +3,9 @@ import { addAnecdoteAction, voteAction } from './reducers/anecdoteReducer'
 
 const App = () => {
 
-  const anecdotes = useSelector(state => state)
+  const anecdotes = useSelector(state => {
+    return state.slice().sort((a, b) => b.votes - a.votes)
+  })
   const dispatch = useDispatch()
 
   const vote = (id) => {
