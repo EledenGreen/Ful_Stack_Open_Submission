@@ -45,14 +45,14 @@ const reducer = (state = initialState, action) => {
   }
 }
 
-const voteAction = (id) => {
+export const voteAction = (id) => {
   return {
     type: 'VOTE',
     payload: { id }
   }
 }
 
-const addAnecdoteAction = (content) => {
+export const addAnecdoteAction = (content) => {
   return {
     type: 'NEW_ANECDOTE',
     payload: {
@@ -64,4 +64,3 @@ const addAnecdoteAction = (content) => {
 }
 
 export default reducer 
-export { voteAction, addAnecdoteAction}
