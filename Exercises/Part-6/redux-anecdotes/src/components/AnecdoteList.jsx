@@ -34,4 +34,4 @@ const AnecdoteList = () => {
     )
 }
 
-export {AnecdoteList, }
+export { AnecdoteList }
