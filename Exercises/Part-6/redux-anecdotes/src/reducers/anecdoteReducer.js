@@ -44,7 +44,7 @@ const anecdoteSlice = createSlice({
       return state.map(anecdote => 
         anecdote.id !== id ? anecdote : changeAnecdote
       )
-    }
+    },
   }
 })
 
