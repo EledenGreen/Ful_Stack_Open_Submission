@@ -18,10 +18,8 @@ const AnecdoteList = () => {
 
     const vote = (id) => {
         console.log('vote', id)
-        dispatch(voteAction(id))
-
         const anecdoteVote = anecdotes.find(n => n.id === id)
-        console.log(anecdoteVote)
+        dispatch(voteAction(id, anecdoteVote))
         dispatch(notificationVote(anecdoteVote.content))
         setTimeout(() => {
             dispatch(notificationRemover())
