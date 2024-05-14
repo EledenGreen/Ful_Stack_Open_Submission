@@ -4,8 +4,6 @@ const Notification = () => {
   const isVisible = useSelector(({notification}) => {return notification})
 
   const content = useSelector(({ notification }) => {
-    if ( notification === 'works')
-        return notification
     return notification
   })
 
