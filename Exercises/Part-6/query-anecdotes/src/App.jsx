@@ -1,9 +1,23 @@
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
-import { QueryClient, useMutation, useQuery, useQueryClient, } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient, } from '@tanstack/react-query'
 import { getAnecdotes, voteAnecdote } from './requests'
+import { useReducer } from 'react'
+import CounterContext from './CounterContext'
+
+const counterReducer = (state = null, action) => {
+  switch (action.type) {
+    case 'NEW':
+      return action.payload
+    default:
+      return null
+  }
+}
 
 const App = () => {
+  const [counter, counterDispatch] = useReducer(counterReducer, null)
+  console.log(counter)
+
   const queryClient = useQueryClient()
 
   const updateAnecdoteMutation = useMutation({
@@ -20,6 +34,10 @@ const App = () => {
 
   const handleVote = (anecdote) => {
     updateAnecdoteMutation.mutate({...anecdote, votes: anecdote.votes + 1 })
+    counterDispatch({ type: 'NEW', payload: `You voted ${anecdote.content}`})
+    setTimeout(() => {
+      counterDispatch('')
+    }, 5000);
     console.log('vote')
   }
 
@@ -42,12 +60,13 @@ const App = () => {
 
   console.log(anecdotes)
   return (
-    <div>
-      <h3>Anecdote app</h3>
-    
+    <CounterContext.Provider value={[counter, counterDispatch]}>
       <Notification />
+
+      <h3>Anecdote app</h3>
+
       <AnecdoteForm />
-    
+
       {anecdotes.map(anecdote =>
         <div key={anecdote.id}>
           <div>
@@ -59,7 +78,7 @@ const App = () => {
           </div>
         </div>
       )}
-    </div>
+    </CounterContext.Provider>
   )
 }
 
