@@ -5,13 +5,16 @@ import loginService from './services/login'
 import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
 import Toggleable from './components/Togglable'
+import { setNotification } from './reducers/notificationReducer'
+import { useDispatch } from 'react-redux'
 
 const App = () => {
+  const dispatch = useDispatch()
+
   const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-  const [message, setMessage] = useState(null)
 
   blogs.sort((a, b) => b.likes - a.likes)
 
@@ -67,10 +70,8 @@ const App = () => {
         setBlogs(initialBlogs)
       })
     } catch (exception) {
-      setMessage('Wrong username or password')
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
+      dispatch(setNotification('Wrong username or password', 5))
+      console.log('not login')
     }
   }
 
@@ -121,10 +122,12 @@ const App = () => {
   const addBlog = (blogObject) => {
     blogService.create(blogObject).then((returnedBlog) => {
       setBlogs(blogs.concat(returnedBlog))
-      setMessage(`a new blog ${blogObject.title} by ${blogObject.author} added`)
-      setTimeout(() => {
-        setMessage(null)
-      }, 5000)
+      dispatch(
+        setNotification(
+          `a new blog ${blogObject.title} by ${blogObject.author} added`,
+          5
+        )
+      )
     })
   }
 
@@ -132,7 +135,7 @@ const App = () => {
     return (
       <div>
         <h2>Log in to application</h2>
-        <Notification message={message} />
+        <Notification />
         {loginForm()}
       </div>
     )
@@ -141,7 +144,7 @@ const App = () => {
   return (
     <div>
       <h2>User</h2>
-      <Notification message={message} />
+      <Notification />
 
       <p> {user.name} logged-in </p>
       {logoutForm()}
