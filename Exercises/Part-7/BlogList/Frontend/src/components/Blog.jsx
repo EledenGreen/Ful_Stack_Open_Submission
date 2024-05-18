@@ -1,28 +1,28 @@
-import Toggleable from "./Togglable";
-import blogService from "../services/blogs";
+import Toggleable from './Togglable'
+import blogService from '../services/blogs'
 
 const Blog = ({ blog, handleLikeUpdate, handleDeleteBlog, user }) => {
-  console.log("delete test", blog);
+  console.log('delete test', blog)
 
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
-    border: "solid",
+    border: 'solid',
     borderWidth: 1,
     marginBottom: 5,
-  };
+  }
 
   const deleteStyle = {
-    display: blog.user.id === user.id ? "" : "none",
-  };
+    display: blog.user.id === user.id ? '' : 'none',
+  }
 
   const handleDelete = async () => {
     try {
-      handleDeleteBlog(blog.id);
+      handleDeleteBlog(blog.id)
     } catch (error) {
-      console.error(error.message);
+      console.error(error.message)
     }
-  };
+  }
 
   return (
     <div style={blogStyle} className="blogTest">
@@ -44,7 +44,7 @@ const Blog = ({ blog, handleLikeUpdate, handleDeleteBlog, user }) => {
         </button>
       </Toggleable>
     </div>
-  );
-};
+  )
+}
 
-export default Blog;
+export default Blog
