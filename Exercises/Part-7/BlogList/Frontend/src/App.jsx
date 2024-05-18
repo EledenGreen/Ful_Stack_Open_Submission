@@ -6,17 +6,20 @@ import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
 import Toggleable from './components/Togglable'
 import { setNotification } from './reducers/notificationReducer'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { createBlogs, likeAction } from './reducers/blogReducer'
+import { setBlogs } from './reducers/blogReducer'
 
 const App = () => {
   const dispatch = useDispatch()
 
-  const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
-  blogs.sort((a, b) => b.likes - a.likes)
+  const blogs = useSelector((state) =>
+    [...state.blogs].slice().sort((a, b) => b.likes - a.likes)
+  )
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -25,7 +28,7 @@ const App = () => {
       setUser(user)
       blogService.setToken(user.token)
       blogService.getAll().then((initialBlogs) => {
-        setBlogs(initialBlogs)
+        dispatch(setBlogs(initialBlogs))
       })
     }
   }, [])
@@ -39,15 +42,14 @@ const App = () => {
       blogService.deleteBlog(id).then(() => {
         window.alert('Deleted')
         blogService.getAll().then((initialBlogs) => {
-          setBlogs(initialBlogs)
+          dispatch(setBlogs(initialBlogs))
         })
       })
     }
   }
 
-  const handleLikeUpdate = async (blog) => {
-    const updatedBlog = await blogService.addLike(blog)
-    setBlogs(blogs.map((b) => (b.id === updatedBlog.id ? updatedBlog : b)))
+  const handleLikeUpdate = (blog) => {
+    dispatch(likeAction(blog))
   }
 
   const handleLogin = async (event) => {
@@ -67,7 +69,7 @@ const App = () => {
       setPassword('')
 
       blogService.getAll().then((initialBlogs) => {
-        setBlogs(initialBlogs)
+        dispatch(setBlogs(initialBlogs))
       })
     } catch (exception) {
       dispatch(setNotification('Wrong username or password', 5))
@@ -120,15 +122,13 @@ const App = () => {
   }
 
   const addBlog = (blogObject) => {
-    blogService.create(blogObject).then((returnedBlog) => {
-      setBlogs(blogs.concat(returnedBlog))
-      dispatch(
-        setNotification(
-          `a new blog ${blogObject.title} by ${blogObject.author} added`,
-          5
-        )
+    dispatch(createBlogs(blogObject))
+    dispatch(
+      setNotification(
+        `a new blog ${blogObject.title} by ${blogObject.author} added`,
+        5
       )
-    })
+    )
   }
 
   if (user === null) {
