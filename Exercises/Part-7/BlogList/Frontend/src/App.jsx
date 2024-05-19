@@ -10,16 +10,56 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createBlogs, likeAction } from './reducers/blogReducer'
 import { setBlogs } from './reducers/blogReducer'
 import { setUser } from './reducers/userReducer'
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Link,
+  useMatch,
+} from 'react-router-dom'
 import userService from './services/user'
 import './App.css'
+
+const Menu = () => {
+  const padding = {
+    paddingRight: 5,
+  }
+  return (
+    <div>
+      <Link style={padding} to="/users">
+        users
+      </Link>
+      <Link style={padding} to="/blogs">
+        blogs
+      </Link>
+    </div>
+  )
+}
+
+const SingleUserView = ({ userMatch }) => {
+  console.log('******************', userMatch)
+  if (!userMatch) {
+    return null
+  }
+  return (
+    <div>
+      <h3>{userMatch.name}</h3>
+      <h4>added blogs</h4>
+      <ul className="userBlogs">
+        {userMatch.blogs.map((blog) => (
+          <li key={blog.id}>{blog.title}</li>
+        ))}
+      </ul>
+    </div>
+  )
+}
 
 const App = () => {
   const dispatch = useDispatch()
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [users, setUsers] = useState()
+  const [users, setUsers] = useState([])
 
   const blogs = useSelector((state) =>
     [...state.blogs].slice().sort((a, b) => b.likes - a.likes)
@@ -42,6 +82,16 @@ const App = () => {
       })
     }
   }, [])
+
+  const match = useMatch('/users/:id')
+  console.log('USERS', users)
+  console.log('MATCH:', match)
+  let userMatch = null
+
+  if (match && users && users.length > 0) {
+    console.log('USERS ARRAY', users)
+    userMatch = users.find((user) => user.id === match.params.id)
+  }
 
   const handleDeleteBlog = (id) => {
     const blogToRemove = blogs.find((blog) => blog.id === id)
@@ -141,23 +191,7 @@ const App = () => {
     )
   }
 
-  const Menu = () => {
-    const padding = {
-      paddingRight: 5,
-    }
-    return (
-      <div>
-        <Link style={padding} to="/users">
-          users
-        </Link>
-        <Link style={padding} to="/blogs">
-          blogs
-        </Link>
-      </div>
-    )
-  }
-
-  const UserView = () => {
+  const UserView = ({ users }) => {
     return (
       <div>
         <h2>User</h2>
@@ -173,7 +207,9 @@ const App = () => {
         <ul>
           {users.map((user) => (
             <li key={user.id} className="userItem">
-              <span className="userName">{user.name}</span>
+              <span className="userName">
+                <Link to={`/users/${user.id}`}>{user.name}</Link>
+              </span>
               <span className="userBlogs">{user.blogs.length}</span>
             </li>
           ))}
@@ -182,7 +218,7 @@ const App = () => {
     )
   }
 
-  const BlogList = () => {
+  const BlogListView = () => {
     return (
       <div>
         <h2>Create</h2>
@@ -222,9 +258,13 @@ const App = () => {
 
       <div>
         <Routes>
-          <Route path="/" element={<UserView />} />
-          <Route path="/users" element={<UserView />} />
-          <Route path="/blogs" element={<BlogList />} />
+          <Route path="/" element={<UserView users={users} />} />
+          <Route path="/users" element={<UserView users={users} />} />
+          <Route
+            path="/users/:id"
+            element={<SingleUserView userMatch={userMatch} />}
+          />
+          <Route path="/blogs" element={<BlogListView />} />
         </Routes>
       </div>
     </div>
