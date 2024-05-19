@@ -12,6 +12,7 @@ import { setBlogs } from './reducers/blogReducer'
 import { setUser } from './reducers/userReducer'
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import userService from './services/user'
+import './App.css'
 
 const App = () => {
   const dispatch = useDispatch()
@@ -156,15 +157,24 @@ const App = () => {
     )
   }
 
-  const Test = () => {
+  const UserView = () => {
     return (
       <div>
+        <h2>User</h2>
         <p> {user.name} logged-in </p>
         {logoutForm()}
+        <h2>Users</h2>
+        <div>
+          <div className="userItem">
+            <span></span>
+            <span className="userBlogs">Blogs created</span>
+          </div>
+        </div>
         <ul>
           {users.map((user) => (
-            <li key={user.id}>
-              {user.name} {user.username}
+            <li key={user.id} className="userItem">
+              <span className="userName">{user.name}</span>
+              <span className="userBlogs">{user.blogs.length}</span>
             </li>
           ))}
         </ul>
@@ -207,12 +217,13 @@ const App = () => {
   return (
     <div>
       <Menu />
-      <h2>User</h2>
+
       <Notification />
 
       <div>
         <Routes>
-          <Route path="/users" element={<Test />} />
+          <Route path="/" element={<UserView />} />
+          <Route path="/users" element={<UserView />} />
           <Route path="/blogs" element={<BlogList />} />
         </Routes>
       </div>
