@@ -10,12 +10,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import { createBlogs, likeAction } from './reducers/blogReducer'
 import { setBlogs } from './reducers/blogReducer'
 import { setUser } from './reducers/userReducer'
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import userService from './services/user'
 
 const App = () => {
   const dispatch = useDispatch()
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [users, setUsers] = useState()
 
   const blogs = useSelector((state) =>
     [...state.blogs].slice().sort((a, b) => b.likes - a.likes)
@@ -32,6 +35,9 @@ const App = () => {
       blogService.setToken(user.token)
       blogService.getAll().then((initialBlogs) => {
         dispatch(setBlogs(initialBlogs))
+      })
+      userService.getAll().then((res) => {
+        setUsers(res)
       })
     }
   }, [])
@@ -134,6 +140,60 @@ const App = () => {
     )
   }
 
+  const Menu = () => {
+    const padding = {
+      paddingRight: 5,
+    }
+    return (
+      <div>
+        <Link style={padding} to="/users">
+          users
+        </Link>
+        <Link style={padding} to="/blogs">
+          blogs
+        </Link>
+      </div>
+    )
+  }
+
+  const Test = () => {
+    return (
+      <div>
+        <p> {user.name} logged-in </p>
+        {logoutForm()}
+        <ul>
+          {users.map((user) => (
+            <li key={user.id}>
+              {user.name} {user.username}
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
+  const BlogList = () => {
+    return (
+      <div>
+        <h2>Create</h2>
+        {addBlogForm()}
+
+        <h2>Blogs</h2>
+        <ul>
+          {blogs.map((blog) => (
+            <Blog
+              key={blog.id}
+              blog={blog}
+              handleLikeUpdate={handleLikeUpdate}
+              handleDeleteBlog={handleDeleteBlog}
+              user={user}
+            />
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
   if (user === null) {
     return (
       <div>
@@ -146,26 +206,16 @@ const App = () => {
 
   return (
     <div>
+      <Menu />
       <h2>User</h2>
       <Notification />
 
-      <p> {user.name} logged-in </p>
-      {logoutForm()}
-
-      <h2>Create</h2>
-      {addBlogForm()}
-
-      <h2>Blogs</h2>
-
-      {blogs.map((blog) => (
-        <Blog
-          key={blog.id}
-          blog={blog}
-          handleLikeUpdate={handleLikeUpdate}
-          handleDeleteBlog={handleDeleteBlog}
-          user={user}
-        />
-      ))}
+      <div>
+        <Routes>
+          <Route path="/users" element={<Test />} />
+          <Route path="/blogs" element={<BlogList />} />
+        </Routes>
+      </div>
     </div>
   )
 }
