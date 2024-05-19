@@ -1,12 +1,14 @@
 /* eslint-disable indent */
 import React, { useState, useEffect, useReducer } from 'react'
 import Blog from './components/Blog'
-import blogService from './services/blogs'
+import blogService, { create } from './services/blogs'
 import loginService from './services/login'
 import Notification from './components/Notification'
 import BlogForm from './components/BlogForm'
 import Toggleable from './components/Togglable'
 import CounterContext from './CounterContext'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { getAll, addLike, deleteBlog } from './services/blogs'
 
 const counterReducer = (state = null, action) => {
   switch (action.type) {
@@ -20,12 +22,11 @@ const counterReducer = (state = null, action) => {
 const App = () => {
   const [counter, counterDispatch] = useReducer(counterReducer, null)
 
-  const [blogs, setBlogs] = useState([])
+  const queryClient = useQueryClient()
+
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
-
-  blogs.sort((a, b) => b.likes - a.likes)
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
@@ -33,30 +34,38 @@ const App = () => {
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
-      blogService.getAll().then((initialBlogs) => {
-        setBlogs(initialBlogs)
-      })
     }
   }, [])
 
-  const handleDeleteBlog = (id) => {
-    const blogToRemove = blogs.find((blog) => blog.id === id)
+  const deleteBlogMutation = useMutation({
+    mutationFn: deleteBlog,
+    onSuccess: () => {
+      queryClient.invalidateQueries('blogs')
+    },
+  })
 
-    if (
-      window.confirm(`Delete ${blogToRemove.title} by ${blogToRemove.author} ?`)
-    ) {
-      blogService.deleteBlog(id).then(() => {
+  const handleDeleteBlog = (blog) => {
+    if (window.confirm(`Delete ${blog.title} by ${blog.author} ?`)) {
+      deleteBlogMutation.mutate(blog).then(() => {
         window.alert('Deleted')
-        blogService.getAll().then((initialBlogs) => {
-          setBlogs(initialBlogs)
-        })
       })
     }
   }
 
+  const likeBlogMutation = useMutation({
+    mutationFn: addLike,
+    onSuccess: (updatedBlog) => {
+      queryClient.setQueryData(['blogs'], (oldData) => {
+        if (!oldData) return []
+        return oldData.map((blog) =>
+          blog.id === updatedBlog.id ? updatedBlog : blog
+        )
+      })
+    },
+  })
+
   const handleLikeUpdate = async (blog) => {
-    const updatedBlog = await blogService.addLike(blog)
-    setBlogs(blogs.map((b) => (b.id === updatedBlog.id ? updatedBlog : b)))
+    likeBlogMutation.mutate(blog)
   }
 
   const handleLogin = async (event) => {
@@ -74,10 +83,6 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
-
-      blogService.getAll().then((initialBlogs) => {
-        setBlogs(initialBlogs)
-      })
     } catch (exception) {
       counterDispatch({
         type: 'NEW_NOTIF',
@@ -133,18 +138,42 @@ const App = () => {
     )
   }
 
-  const addBlog = (blogObject) => {
-    blogService.create(blogObject).then((returnedBlog) => {
-      setBlogs(blogs.concat(returnedBlog))
+  const newBlogMutation = useMutation({
+    mutationFn: create,
+    onSuccess: (newBlog) => {
+      const blogs = queryClient.getQueryData(['blogs'])
+      queryClient.setQueryData(['blogs'], blogs.concat(newBlog))
       counterDispatch({
         type: 'NEW_NOTIF',
-        payload: `a new blog 4{blogObject.title} by ${blogObject.author} added`,
+        payload: `a new blog ${newBlog.title} by ${newBlog.author} added`,
       })
       setTimeout(() => {
         counterDispatch('')
       }, 5000)
-    })
+    },
+  })
+
+  const addBlog = (blogObject) => {
+    newBlogMutation.mutate(blogObject)
   }
+
+  const result = useQuery({
+    queryKey: ['blogs'],
+    queryFn: getAll,
+    retry: 1,
+  })
+
+  if (result.isPending) {
+    return <div>pending</div>
+  }
+
+  if (result.isError) {
+    return <div>error</div>
+  }
+
+  const blogs = result.data
+
+  blogs.sort((a, b) => b.likes - a.likes)
 
   if (user === null) {
     return (
