@@ -1,5 +1,4 @@
 import Toggleable from './Togglable'
-import blogService from '../services/blogs'
 
 const Blog = ({ blog, handleLikeUpdate, handleDeleteBlog, user }) => {
   console.log('delete test', blog)

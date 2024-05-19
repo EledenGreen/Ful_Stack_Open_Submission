@@ -9,23 +9,26 @@ import { setNotification } from './reducers/notificationReducer'
 import { useDispatch, useSelector } from 'react-redux'
 import { createBlogs, likeAction } from './reducers/blogReducer'
 import { setBlogs } from './reducers/blogReducer'
+import { setUser } from './reducers/userReducer'
 
 const App = () => {
   const dispatch = useDispatch()
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
 
   const blogs = useSelector((state) =>
     [...state.blogs].slice().sort((a, b) => b.likes - a.likes)
   )
 
+  const user = useSelector((state) => state.user)
+  console.log('initial user state', user)
+
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      dispatch(setUser(user))
       blogService.setToken(user.token)
       blogService.getAll().then((initialBlogs) => {
         dispatch(setBlogs(initialBlogs))
@@ -64,7 +67,7 @@ const App = () => {
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
 
       blogService.setToken(user.token)
-      setUser(user)
+      dispatch(setUser(user))
       setUsername('')
       setPassword('')
 
