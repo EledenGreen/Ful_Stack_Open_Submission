@@ -19,21 +19,30 @@ const counterReducer = (state = null, action) => {
   }
 }
 
+const userReducer = (state, action) => {
+  switch (action.type) {
+    case 'NEW_USER':
+      return action.payload
+    default:
+      return state
+  }
+}
+
 const App = () => {
   const [counter, counterDispatch] = useReducer(counterReducer, null)
+  const [user, userDispatch] = useReducer(userReducer, null)
 
   const queryClient = useQueryClient()
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
 
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
       blogService.setToken(user.token)
+      userDispatch({ type: 'NEW_USER', payload: user })
     }
   }, [])
 
@@ -80,7 +89,7 @@ const App = () => {
       window.localStorage.setItem('loggedBlogappUser', JSON.stringify(user))
 
       blogService.setToken(user.token)
-      setUser(user)
+      userDispatch({ type: 'NEW_USER', payload: user })
       setUsername('')
       setPassword('')
     } catch (exception) {
