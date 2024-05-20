@@ -105,20 +105,20 @@ blogsRouter.put('/:id', async (request, response) => {
 
 blogsRouter.post('/:id/comments', async (request, response) => {
   const id = request.params.id
-  const comment = request.body
+  const comment = request.body.comment
 
   const blog = await Blog.findById(id)
 
-  console.log('BACKEND', id)
+  console.log('BACKEND', typeof comment)
 
   if (!blog.comment) {
     blog.comment = []
   }
 
-  /*blog.comment.push(comment)
+  blog.comment.push(comment)
 
   await blog.save()
-  response.status(200).json(blog)*/
+  response.status(200).json(blog)
 })
 
 module.exports = blogsRouter
