@@ -221,9 +221,10 @@ const App = () => {
 
     const handleComment = async (event) => {
       event.preventDefault()
-      const content = event.target.value
+      const content = event.target.comment.value
       event.target.value = ''
       dispatch(createComment(blogMatch, content))
+      console.log('App', content)
     }
 
     const handleLikeUpdate = (blogMatch) => {
@@ -248,6 +249,11 @@ const App = () => {
           <input name="comment" />
           <button type="submit">add comment</button>
         </form>
+        <ul>
+          {blogMatch.comment.map((e) => (
+            <li key={e}>{e}</li>
+          ))}
+        </ul>
       </div>
     )
   }

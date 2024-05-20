@@ -42,6 +42,7 @@ export const createComment = (object, content) => {
   return async (dispatch) => {
     await blogService.addComment(object, content)
     const blogs = await blogService.getAll()
+    console.log('reducer', content)
     dispatch(setBlogs(blogs))
   }
 }
