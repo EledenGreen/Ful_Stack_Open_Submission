@@ -68,8 +68,9 @@ const App = () => {
   const user = useSelector((state) => state.user)
   console.log('initial user state', user)
 
+  const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
+
   useEffect(() => {
-    const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     if (loggedUserJSON) {
       const user = JSON.parse(loggedUserJSON)
       dispatch(setUser(user))
@@ -77,11 +78,14 @@ const App = () => {
       blogService.getAll().then((initialBlogs) => {
         dispatch(setBlogs(initialBlogs))
       })
-      userService.getAll().then((res) => {
-        setUsers(res)
-      })
+      if (users.length === 0) {
+        userService.getAll().then((res) => {
+          setUsers(res)
+          console.log('asdfg')
+        })
+      }
     }
-  }, [])
+  }, [loggedUserJSON])
 
   const match = useMatch('/users/:id')
   console.log('USERS', users)
