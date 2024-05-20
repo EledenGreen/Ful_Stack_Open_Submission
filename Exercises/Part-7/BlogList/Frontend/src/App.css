@@ -54,3 +54,28 @@
 .userBlogs {
   text-align: left;
 }
+
+.navigation {
+  display: flex;
+  justify-content: space-between;
+  background-color: rgb(82, 66, 50);
+  padding: 5px 10px;
+  height: 30px;
+  width: 100%;
+}
+
+.navigation a {
+  color: rgb(6, 31, 248);
+}
+
+form .logout-button {
+  border-radius: 3px;
+  border: none;
+  padding: 0.3em 0.3em;
+  font-size: 0.6em;
+  font-weight: 300;
+  font-family: inherit;
+  background-color: #a38989;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}

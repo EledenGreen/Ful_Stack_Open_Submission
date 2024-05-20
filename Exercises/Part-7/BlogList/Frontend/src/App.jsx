@@ -23,18 +23,6 @@ import './App.css'
 const padding = {
   paddingRight: 5,
 }
-const Menu = () => {
-  return (
-    <div>
-      <Link style={padding} to="/users">
-        users
-      </Link>
-      <Link style={padding} to="/blogs">
-        blogs
-      </Link>
-    </div>
-  )
-}
 
 const App = () => {
   const dispatch = useDispatch()
@@ -146,7 +134,9 @@ const App = () => {
 
   const logoutForm = () => (
     <form onSubmit={handleLogout}>
-      <button type="submit">Logout</button>
+      <button type="submit" className="logout-button">
+        Logout
+      </button>
     </form>
   )
 
@@ -171,11 +161,6 @@ const App = () => {
   const UserView = ({ users }) => {
     return (
       <div>
-        <div style={padding}>
-          <p> {user.name} logged-in </p>
-          {logoutForm()}
-        </div>
-
         <h2>Users</h2>
         <div>
           <div className="userItem">
@@ -200,9 +185,6 @@ const App = () => {
   const BlogListView = () => {
     return (
       <div>
-        <h2>User</h2>
-        <p> {user.name} logged-in </p>
-        {logoutForm()}
         <h2>Create</h2>
         {addBlogForm()}
 
@@ -223,9 +205,6 @@ const App = () => {
     }
     return (
       <div>
-        <h2>User</h2>
-        <p> {user.name} logged-in </p>
-        {logoutForm()}
         <h3>{userMatch.name}</h3>
         <h4>added blogs</h4>
         <ul className="userBlogs">
@@ -246,9 +225,6 @@ const App = () => {
     console.log('SINGLE', blogMatch)
     return (
       <div>
-        <h2>User</h2>
-        <p> {user.name} logged-in </p>
-        {logoutForm()}
         <h3>
           {blogMatch.title} {blogMatch.author}{' '}
         </h3>
@@ -276,7 +252,16 @@ const App = () => {
 
   return (
     <div>
-      <Menu />
+      <div className="navigation">
+        <Link style={padding} to="/users">
+          users
+        </Link>
+        <Link style={padding} to="/blogs">
+          blogs
+        </Link>
+        {user.name} logged-in
+        {logoutForm()}
+      </div>
 
       <Notification />
 
