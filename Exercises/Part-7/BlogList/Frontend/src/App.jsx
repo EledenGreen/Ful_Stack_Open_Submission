@@ -19,6 +19,7 @@ import {
 } from 'react-router-dom'
 import userService from './services/user'
 import './App.css'
+import Button from '@mui/material/Button'
 
 const padding = {
   paddingRight: 5,
@@ -128,15 +129,17 @@ const App = () => {
           data-testid="password"
         />
       </div>
-      <button type="submit">login</button>
+      <Button variant="contained" type="submit">
+        login
+      </Button>
     </form>
   )
 
   const logoutForm = () => (
     <form onSubmit={handleLogout}>
-      <button type="submit" className="logout-button">
+      <Button variant="contained" type="submit" className="logout-button">
         Logout
-      </button>
+      </Button>
     </form>
   )
 
@@ -240,14 +243,21 @@ const App = () => {
           <li>url: {blogMatch.url} </li>
           <li className="likes">
             likes: {blogMatch.likes}
-            <button onClick={() => handleLikeUpdate(blogMatch)}>like</button>
+            <Button
+              variant="contained"
+              onClick={() => handleLikeUpdate(blogMatch)}
+            >
+              like
+            </Button>
           </li>
           <li> added by {blogMatch.user.name} </li>
         </ul>
         <div>Comments</div>
         <form onSubmit={handleComment}>
           <input name="comment" />
-          <button type="submit">add comment</button>
+          <Button variant="contained" type="submit">
+            add comment
+          </Button>
         </form>
         <ul>
           {blogMatch.comment.map((e) => (
