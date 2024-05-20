@@ -1,7 +1,16 @@
-import Toggleable from './Togglable'
+import { Link, Routes, Route, useMatch } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const Blog = ({ blog, handleLikeUpdate, handleDeleteBlog, user }) => {
-  console.log('delete test', blog)
+  const blogs = useSelector((state) => state.blogs)
+
+  const match = useMatch('/blogs/:id')
+  let blogMatch = null
+
+  if (match && blogs && blogs.length > 0) {
+    blogMatch = blogs.find((b) => b.id === match.params.id)
+  }
+  console.log('test', blog)
 
   const blogStyle = {
     paddingTop: 10,
@@ -11,37 +20,12 @@ const Blog = ({ blog, handleLikeUpdate, handleDeleteBlog, user }) => {
     marginBottom: 5,
   }
 
-  const deleteStyle = {
-    display: blog.user.id === user.id ? '' : 'none',
-  }
-
-  const handleDelete = async () => {
-    try {
-      handleDeleteBlog(blog.id)
-    } catch (error) {
-      console.error(error.message)
-    }
-  }
-
   return (
     <div style={blogStyle} className="blogTest">
       {console.log(blog)}
-      {blog.title} {blog.author}
-      <Toggleable buttonLabel="view">
-        <div>
-          <ul>
-            <li>url: {blog.url}</li>
-            <li className="likes">
-              likes: {blog.likes}
-              <button onClick={() => handleLikeUpdate(blog)}>like</button>
-            </li>
-            <li>username: {blog.user.username}</li>
-          </ul>
-        </div>
-        <button style={deleteStyle} onClick={handleDelete}>
-          remove
-        </button>
-      </Toggleable>
+      <Link to={`/blogs/${blog.id}`}>
+        {blog.title} {blog.author}
+      </Link>
     </div>
   )
 }

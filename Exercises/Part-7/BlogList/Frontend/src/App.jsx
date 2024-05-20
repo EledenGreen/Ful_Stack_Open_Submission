@@ -20,10 +20,10 @@ import {
 import userService from './services/user'
 import './App.css'
 
+const padding = {
+  paddingRight: 5,
+}
 const Menu = () => {
-  const padding = {
-    paddingRight: 5,
-  }
   return (
     <div>
       <Link style={padding} to="/users">
@@ -32,24 +32,6 @@ const Menu = () => {
       <Link style={padding} to="/blogs">
         blogs
       </Link>
-    </div>
-  )
-}
-
-const SingleUserView = ({ userMatch }) => {
-  console.log('******************', userMatch)
-  if (!userMatch) {
-    return null
-  }
-  return (
-    <div>
-      <h3>{userMatch.name}</h3>
-      <h4>added blogs</h4>
-      <ul className="userBlogs">
-        {userMatch.blogs.map((blog) => (
-          <li key={blog.id}>{blog.title}</li>
-        ))}
-      </ul>
     </div>
   )
 }
@@ -97,23 +79,14 @@ const App = () => {
     userMatch = users.find((user) => user.id === match.params.id)
   }
 
-  const handleDeleteBlog = (id) => {
-    const blogToRemove = blogs.find((blog) => blog.id === id)
+  const match2 = useMatch('/blogs/:id')
+  console.log('USERS', users)
+  console.log('MATCH:', match2)
+  let blogMatch = null
 
-    if (
-      window.confirm(`Delete ${blogToRemove.title} by ${blogToRemove.author} ?`)
-    ) {
-      blogService.deleteBlog(id).then(() => {
-        window.alert('Deleted')
-        blogService.getAll().then((initialBlogs) => {
-          dispatch(setBlogs(initialBlogs))
-        })
-      })
-    }
-  }
-
-  const handleLikeUpdate = (blog) => {
-    dispatch(likeAction(blog))
+  if (match2 && blogs && blogs.length > 0) {
+    blogMatch = blogs.find((blog) => blog.id === match2.params.id)
+    console.log('INSIDE', blogMatch)
   }
 
   const handleLogin = async (event) => {
@@ -198,9 +171,11 @@ const App = () => {
   const UserView = ({ users }) => {
     return (
       <div>
-        <h2>User</h2>
-        <p> {user.name} logged-in </p>
-        {logoutForm()}
+        <div style={padding}>
+          <p> {user.name} logged-in </p>
+          {logoutForm()}
+        </div>
+
         <h2>Users</h2>
         <div>
           <div className="userItem">
@@ -225,20 +200,65 @@ const App = () => {
   const BlogListView = () => {
     return (
       <div>
+        <h2>User</h2>
+        <p> {user.name} logged-in </p>
+        {logoutForm()}
         <h2>Create</h2>
         {addBlogForm()}
 
         <h2>Blogs</h2>
         <ul>
           {blogs.map((blog) => (
-            <Blog
-              key={blog.id}
-              blog={blog}
-              handleLikeUpdate={handleLikeUpdate}
-              handleDeleteBlog={handleDeleteBlog}
-              user={user}
-            />
+            <Blog key={blog.id} blog={blog} user={user} />
           ))}
+        </ul>
+      </div>
+    )
+  }
+
+  const SingleUserView = ({ userMatch }) => {
+    console.log('******************', userMatch)
+    if (!userMatch) {
+      return null
+    }
+    return (
+      <div>
+        <h2>User</h2>
+        <p> {user.name} logged-in </p>
+        {logoutForm()}
+        <h3>{userMatch.name}</h3>
+        <h4>added blogs</h4>
+        <ul className="userBlogs">
+          {userMatch.blogs.map((blog) => (
+            <li key={blog.id}>{blog.title}</li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+
+  const SingleBlogView = ({ blogMatch }) => {
+    const dispatch = useDispatch()
+
+    const handleLikeUpdate = (blogMatch) => {
+      dispatch(likeAction(blogMatch))
+    }
+    console.log('SINGLE', blogMatch)
+    return (
+      <div>
+        <h2>User</h2>
+        <p> {user.name} logged-in </p>
+        {logoutForm()}
+        <h3>
+          {blogMatch.title} {blogMatch.author}{' '}
+        </h3>
+        <ul>
+          <li>url: {blogMatch.url} </li>
+          <li className="likes">
+            likes: {blogMatch.likes}
+            <button onClick={() => handleLikeUpdate(blogMatch)}>like</button>
+          </li>
+          <li> added by {blogMatch.user.name} </li>
         </ul>
       </div>
     )
@@ -262,13 +282,17 @@ const App = () => {
 
       <div>
         <Routes>
-          <Route path="/" element={<UserView users={users} />} />
+          <Route path="/" element={<BlogListView />} />
           <Route path="/users" element={<UserView users={users} />} />
           <Route
             path="/users/:id"
             element={<SingleUserView userMatch={userMatch} />}
           />
           <Route path="/blogs" element={<BlogListView />} />
+          <Route
+            path="/blogs/:id"
+            element={<SingleBlogView blogMatch={blogMatch} />}
+          />
         </Routes>
       </div>
     </div>
