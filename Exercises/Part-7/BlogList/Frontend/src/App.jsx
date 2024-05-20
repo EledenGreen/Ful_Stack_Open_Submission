@@ -7,7 +7,7 @@ import BlogForm from './components/BlogForm'
 import Toggleable from './components/Togglable'
 import { setNotification } from './reducers/notificationReducer'
 import { useDispatch, useSelector } from 'react-redux'
-import { createBlogs, likeAction } from './reducers/blogReducer'
+import { createBlogs, createComment, likeAction } from './reducers/blogReducer'
 import { setBlogs } from './reducers/blogReducer'
 import { setUser } from './reducers/userReducer'
 import {
@@ -219,6 +219,13 @@ const App = () => {
   const SingleBlogView = ({ blogMatch }) => {
     const dispatch = useDispatch()
 
+    const handleComment = async (event) => {
+      event.preventDefault()
+      const content = event.target.value
+      event.target.value = ''
+      dispatch(createComment(blogMatch, content))
+    }
+
     const handleLikeUpdate = (blogMatch) => {
       dispatch(likeAction(blogMatch))
     }
@@ -236,6 +243,11 @@ const App = () => {
           </li>
           <li> added by {blogMatch.user.name} </li>
         </ul>
+        <div>Comments</div>
+        <form onSubmit={handleComment}>
+          <input name="comment" />
+          <button type="submit">add comment</button>
+        </form>
       </div>
     )
   }
