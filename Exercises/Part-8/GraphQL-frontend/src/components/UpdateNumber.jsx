@@ -25,11 +25,9 @@ const UpdateNumber = () => {
 
   const handleUpdate = async (event) => {
     event.preventDefault()
-    console.log(selectedOption.value)
     const name = selectedOption.value
-    console.log('name', name)
-    changeBorn({ variables: { name, born } })
 
+    changeBorn({ variables: { name, born } })
     setBorn('')
   }
   return (
