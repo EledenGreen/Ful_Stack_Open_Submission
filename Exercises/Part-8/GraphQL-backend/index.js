@@ -169,14 +169,29 @@ const resolvers = {
     allBooks: async (root, args) => {
       //can be optimized but left for readibility
       if (args.author && args.genre) {
-        return books.filter(
-          (book) =>
-            book.author === args.author && book.genres.includes(args.genre)
-        )
+        const author = await Author.findOne({ name: args.author })
+        if (!author) {
+          throw new GraphQLError('author not found')
+        }
+        const authorId = author._id.toString()
+        const book = await Book.find({
+          genres: args.genre,
+          author: authorId,
+        }).populate('author')
+        console.log(book)
+        return book
       } else if (args.author) {
-        return books.filter((book) => book.author === args.author)
+        const author = await Author.findOne({ name: args.author })
+        if (!author) {
+          throw new GraphQLError('author not found')
+        }
+
+        const authorId = author._id.toString()
+        const book = await Book.find({ author: authorId }).populate('author')
+
+        return book
       } else if (args.genre) {
-        return Book.find({ genres: args.genre })
+        return Book.find({ genres: args.genre }).populate('author')
       } else {
         return Book.find({}).populate('author')
       }
@@ -186,10 +201,13 @@ const resolvers = {
     },
   },
   Author: {
-    bookCount: (root) => {
+    bookCount: async (root) => {
+      const author = await Author.findOne({ name: root.name })
+      const authorId = author._id.toString()
+      const booksDB = await Book.find({})
       let count = 0
-      for (let i of books) {
-        if (i.author === root.name) {
+      for (let i of booksDB) {
+        if (i.author.toString() === authorId) {
           count++
         }
       }
