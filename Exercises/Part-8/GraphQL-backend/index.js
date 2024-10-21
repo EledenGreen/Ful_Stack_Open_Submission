@@ -226,7 +226,13 @@ const resolvers = {
           console.log(author)
           authorId = author._id.toString()
         } catch (error) {
-          throw new GraphQLError('saving author failed')
+          throw new GraphQLError('saving author failed', {
+            extensions: {
+              code: 'BAD_USER_INPUT',
+              invalidArgs: args.name,
+              error,
+            },
+          })
         }
       } else {
         authorId = existingAuthor._id.toString()
@@ -237,7 +243,13 @@ const resolvers = {
         await book.save()
       } catch (error) {
         console.log(error)
-        throw new GraphQLError('saving book failed')
+        throw new GraphQLError('saving book failed', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.name,
+            error,
+          },
+        })
       }
 
       return book.populate('author')
@@ -254,7 +266,13 @@ const resolvers = {
         await author.save()
       } catch (error) {
         console.log(error)
-        throw new GraphQLError('Editing failed')
+        throw new GraphQLError('Editing failed', {
+          extensions: {
+            code: 'BAD_USER_INPUT',
+            invalidArgs: args.name,
+            error,
+          },
+        })
       }
 
       return author
