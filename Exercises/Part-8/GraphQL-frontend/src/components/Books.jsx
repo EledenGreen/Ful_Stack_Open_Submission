@@ -1,18 +1,25 @@
 import { useQuery } from '@apollo/client'
 import { ALL_BOOKS } from '../queries'
+import Genre from './Genre'
+import { useEffect, useState } from 'react'
 
 const Books = (props) => {
+  const [books, setBooks] = useState([])
   const result = useQuery(ALL_BOOKS)
 
+  useEffect(() => {
+    if (result.data && result.data.allBooks) {
+      setBooks(result.data.allBooks)
+    }
+  }, [result])
+
   if (result.loading) {
-    return <>loading</>
+    return null
   }
 
   if (!props.show) {
     return null
   }
-
-  const books = result.data.allBooks
 
   return (
     <div>
@@ -34,6 +41,7 @@ const Books = (props) => {
           ))}
         </tbody>
       </table>
+      <Genre setBooks={setBooks} />
     </div>
   )
 }
