@@ -4,7 +4,6 @@ import UpdateNumber from './UpdateNumber'
 
 const Authors = (props) => {
   const result = useQuery(ALL_AUTHORS)
-  console.log(result.data)
   if (result.loading) {
     return <div>loading...</div>
   }
