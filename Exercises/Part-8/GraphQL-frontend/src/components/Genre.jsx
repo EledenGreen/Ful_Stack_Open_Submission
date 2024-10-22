@@ -2,7 +2,7 @@ import { useLazyQuery, useQuery } from '@apollo/client'
 import { ALL_BOOKS } from '../queries'
 import { useState } from 'react'
 
-const Genre = ({ setBooks }) => {
+const Genre = ({ setBooks, setGenre }) => {
   const result = useQuery(ALL_BOOKS)
   const [AllBooks] = useLazyQuery(ALL_BOOKS)
 
@@ -22,6 +22,13 @@ const Genre = ({ setBooks }) => {
     const { data } = await AllBooks({ variables: { genre: p } })
     console.log(data.allBooks)
     setBooks(data.allBooks)
+    setGenre(p)
+  }
+
+  const reset = async () => {
+    const { data } = await AllBooks()
+    setBooks(data.allBooks)
+    setGenre('all genres')
   }
 
   return (
@@ -31,6 +38,7 @@ const Genre = ({ setBooks }) => {
           {p}
         </button>
       ))}
+      <button onClick={() => reset()}>all genres</button>
     </>
   )
 }

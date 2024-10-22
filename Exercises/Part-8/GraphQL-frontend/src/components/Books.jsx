@@ -5,15 +5,16 @@ import { useEffect, useState } from 'react'
 
 const Books = (props) => {
   const [books, setBooks] = useState([])
-  const result = useQuery(ALL_BOOKS)
+  const [genre, setGenre] = useState('all genres')
+  const { data, loading, refetch } = useQuery(ALL_BOOKS)
 
   useEffect(() => {
-    if (result.data && result.data.allBooks) {
-      setBooks(result.data.allBooks)
+    if (data && data.allBooks) {
+      setBooks(data.allBooks)
     }
-  }, [result])
+  }, [data])
 
-  if (result.loading) {
+  if (loading) {
     return null
   }
 
@@ -24,7 +25,7 @@ const Books = (props) => {
   return (
     <div>
       <h2>books</h2>
-
+      <p>Genre: {genre}</p>
       <table>
         <tbody>
           <tr>
@@ -41,7 +42,7 @@ const Books = (props) => {
           ))}
         </tbody>
       </table>
-      <Genre setBooks={setBooks} />
+      <Genre setBooks={setBooks} setGenre={setGenre} />
     </div>
   )
 }
