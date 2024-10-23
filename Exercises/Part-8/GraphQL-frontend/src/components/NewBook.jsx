@@ -1,7 +1,6 @@
 import { useMutation } from '@apollo/client'
 import { useState } from 'react'
 import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS } from '../queries'
-import eventEmitter from './eventEmitter'
 
 const NewBook = (props) => {
   const [title, setTitle] = useState('')

@@ -1,41 +1,38 @@
-import { useLazyQuery, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import { useEffect, useState } from 'react'
 import { ALL_BOOKS, ME } from '../queries'
 
 const Recommend = (props) => {
   const [userGenre, setUserGenre] = useState('')
-  const [books, setBooks] = useState([])
   const { data: meData } = useQuery(ME, {
-    skip: !props.token,
+    skip: !props.token, // Skip the query if no token is provided
   })
-  const [AllBooks, { loading: booksLoading }] = useLazyQuery(ALL_BOOKS)
+
+  // Execute ALL_BOOKS only when userGenre is available
+  const { data: bookData, loading: booksLoading } = useQuery(ALL_BOOKS, {
+    variables: { genre: userGenre },
+    skip: !userGenre, // Skip the query until userGenre is set
+  })
 
   useEffect(() => {
-    const fetch = async () => {
-      if (props.token && meData && meData.me) {
-        const genre = meData.me.favoriteGenre
-        console.log('genre', genre)
-        const { data: bookData } = await AllBooks({
-          variables: { genre: genre },
-        })
-        console.log('books', bookData)
-        setUserGenre(genre)
-        setBooks(bookData.allBooks)
-      } else {
-        setUserGenre('')
-        setBooks([])
-      }
+    if (props.token && meData && meData.me) {
+      const genre = meData.me.favoriteGenre
+      console.log('genre', genre)
+      setUserGenre(genre)
+    } else {
+      setUserGenre('')
     }
-    fetch()
-  }, [props.token, meData, AllBooks])
+  }, [props.token, meData])
 
   if (!props.show) {
     return null
   }
 
-  if (booksLoading || books.length < 0) {
+  if (booksLoading || !bookData) {
     return <>loading...</>
   }
+
+  const books = bookData.allBooks || []
 
   return (
     <div>
