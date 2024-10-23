@@ -4,6 +4,7 @@ import { ALL_BOOKS, ME } from '../queries'
 
 const Recommend = (props) => {
   const [userGenre, setUserGenre] = useState('')
+
   const { data: meData } = useQuery(ME, {
     skip: !props.token, // Skip the query if no token is provided
   })
