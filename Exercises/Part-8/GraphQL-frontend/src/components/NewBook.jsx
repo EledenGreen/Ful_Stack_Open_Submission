@@ -1,6 +1,7 @@
 import { useMutation } from '@apollo/client'
 import { useState } from 'react'
 import { ADD_BOOK, ALL_AUTHORS, ALL_BOOKS } from '../queries'
+import eventEmitter from './eventEmitter'
 
 const NewBook = (props) => {
   const [title, setTitle] = useState('')
@@ -10,7 +11,34 @@ const NewBook = (props) => {
   const [genres, setGenres] = useState([])
 
   const [createBook] = useMutation(ADD_BOOK, {
-    refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
+    refetchQueries: [{ query: ALL_AUTHORS }],
+    update: (cache, { data: { addBook } }) => {
+      cache.updateQuery({ query: ALL_BOOKS }, ({ allBooks }) => {
+        return {
+          allBooks: allBooks.concat(addBook),
+        }
+      })
+
+      const bookGenres = addBook.genres
+
+      bookGenres.forEach((genre) => {
+        try {
+          cache.updateQuery(
+            {
+              query: ALL_BOOKS,
+              variables: { genre },
+            },
+            ({ allBooks }) => {
+              return {
+                allBooks: allBooks.concat(addBook),
+              }
+            }
+          )
+        } catch (e) {
+          console.error(` ${genre}`, e)
+        }
+      })
+    },
   })
 
   if (!props.show) {

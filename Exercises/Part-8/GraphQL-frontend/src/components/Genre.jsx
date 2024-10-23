@@ -1,12 +1,22 @@
-import { useLazyQuery, useQuery } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import { ALL_BOOKS } from '../queries'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const Genre = ({ setBooks, setGenre }) => {
-  const result = useQuery(ALL_BOOKS)
-  const [AllBooks] = useLazyQuery(ALL_BOOKS)
+  const [selectedGenre, setSelectedGenre] = useState(null)
 
-  if (result.loading) {
+  const result = useQuery(ALL_BOOKS)
+  const { loading, data } = useQuery(ALL_BOOKS, {
+    variables: selectedGenre ? { genre: selectedGenre } : {},
+  })
+
+  useEffect(() => {
+    if (data) {
+      setBooks(data.allBooks)
+    }
+  }, [data, setBooks])
+
+  if (result.loading || loading) {
     return <>loading</>
   }
 
@@ -18,16 +28,12 @@ const Genre = ({ setBooks, setGenre }) => {
   }
 
   const handleGenre = async (p) => {
-    console.log('p', p)
-    const { data } = await AllBooks({ variables: { genre: p } })
-    console.log(data.allBooks)
-    setBooks(data.allBooks)
+    setSelectedGenre(p)
     setGenre(p)
   }
 
   const reset = async () => {
-    const { data } = await AllBooks()
-    setBooks(data.allBooks)
+    setSelectedGenre(null)
     setGenre('all genres')
   }
 
