@@ -18,6 +18,7 @@ const jwt = require('jsonwebtoken')
 
 const typeDefs = require('./schema')
 const resolvers = require('./resolvers')
+const { bookCountLoader, authorLoader } = require('./loaders')
 
 require('dotenv').config()
 
@@ -33,6 +34,8 @@ mongoose
   .catch((error) => {
     console.log('error connecting to MongoDB:', error.message)
   })
+
+mongoose.set('debug', true)
 
 const start = async () => {
   const app = express()
@@ -71,13 +74,26 @@ const start = async () => {
     expressMiddleware(server, {
       context: async ({ req }) => {
         const auth = req ? req.headers.authorization : null
+        let currentUser = null
+
         if (auth && auth.startsWith('Bearer ')) {
-          const decodedToken = jwt.verify(
-            auth.substring(7),
-            process.env.JWT_SECRET
-          )
-          const currentUser = await User.findById(decodedToken.id)
-          return { currentUser }
+          try {
+            const decodedToken = jwt.verify(
+              auth.substring(7),
+              process.env.JWT_SECRET
+            )
+            currentUser = await User.findById(decodedToken.id)
+          } catch (err) {
+            console.log('Error verifying JWT:', err.message)
+          }
+        }
+
+        return {
+          currentUser,
+          loaders: {
+            bookCountLoader,
+            authorLoader,
+          },
         }
       },
     })

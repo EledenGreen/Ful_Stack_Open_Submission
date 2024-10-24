@@ -49,17 +49,14 @@ const resolvers = {
     },
   },
   Author: {
-    bookCount: async (root) => {
-      const author = await Author.findOne({ name: root.name })
-      const authorId = author._id.toString()
-      const booksDB = await Book.find({})
-      let count = 0
-      for (let i of booksDB) {
-        if (i.author.toString() === authorId) {
-          count++
-        }
+    bookCount: async (root, args, { loaders }) => {
+      const author = await loaders.authorLoader.load(root.name)
+
+      if (!author) {
+        return 0
       }
-      return count
+
+      return loaders.bookCountLoader.load(author._id)
     },
   },
   Mutation: {
