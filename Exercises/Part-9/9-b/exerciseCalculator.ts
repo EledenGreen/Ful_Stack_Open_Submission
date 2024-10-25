@@ -1,3 +1,26 @@
+interface InputValues {
+  a: number[]
+  b: number
+}
+
+const parseArguments = (args: string[]): InputValues => {
+  if (args.length < 4) throw new Error('not enough arguments')
+
+  let a: number[] = []
+  for (let i = 3; i < args.length; i++) {
+    if (isNaN(Number(args[i]))) {
+      throw new Error('invalid input')
+    }
+    a.push(Number(args[i]))
+  }
+  const b = Number(args[2])
+
+  return {
+    a: a,
+    b: b,
+  }
+}
+
 interface Result {
   periodLength: number
   trainingDays: number
@@ -47,4 +70,13 @@ const calculateExercise = (a: number[], b: number): Result => {
   }
 }
 
-console.log(calculateExercise([3, 0, 2, 4.5, 0, 3, 1], 2))
+try {
+  const { a, b } = parseArguments(process.argv)
+  console.log(calculateExercise(a, b))
+} catch (error: unknown) {
+  let errorMessage = 'Something bad happened.'
+  if (error instanceof Error) {
+    errorMessage += ' Error: ' + error.message
+  }
+  console.log(errorMessage)
+}
