@@ -1,4 +1,4 @@
-interface InputValues {
+export interface InputValues {
   a: number[];
   b: number;
 }
@@ -21,7 +21,7 @@ const parseArguments = (args: string[]): InputValues => {
   };
 };
 
-interface Result {
+export interface Result {
   periodLength: number;
   trainingDays: number;
   success: boolean;
@@ -31,7 +31,7 @@ interface Result {
   average: number;
 }
 
-const calculateExercise = (a: number[], b: number): Result => {
+export const calculateExercise = (a: number[], b: number): Result => {
   const periodLength = a.length;
   let trainingDays = 0;
   a.forEach((p) => {
