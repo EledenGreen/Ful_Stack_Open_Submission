@@ -76,3 +76,5 @@ const toNewPatientEntry = (object: unknown): NewPatientEntry => {
 };
 
 export default toNewPatientEntry;
+
+// optional field not implemented yet
