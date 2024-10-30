@@ -4,7 +4,6 @@ import diagnosesRouter from "./routes/diagnoses";
 import cors from "cors";
 
 const app = express();
-// eslint-disable-next-line
 app.use(cors());
 app.use(express.json());
 
