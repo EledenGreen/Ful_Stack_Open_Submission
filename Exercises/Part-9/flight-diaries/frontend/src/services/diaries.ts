@@ -1,9 +1,14 @@
 import axios from 'axios'
 import { baseUrl } from '../constants'
-import { NonSensitiveDiaryEntry } from '../types'
+import { DiaryEntry, NewDiaryEntry, NonSensitiveDiaryEntry } from '../types'
 
-export const getAllDiaries = () => {
-  return axios
-    .get<NonSensitiveDiaryEntry[]>(baseUrl)
-    .then((response) => response.data)
+export const getAllDiaries = async () => {
+  const response = await axios.get<NonSensitiveDiaryEntry[]>(baseUrl)
+  return response.data
+}
+
+export const create = async (object: NewDiaryEntry) => {
+  const { data } = await axios.post<DiaryEntry>(baseUrl, object)
+
+  return data
 }
