@@ -3,13 +3,24 @@ import { DiaryEntry, NewDiaryEntry, Visibility, Weather } from './types'
 import { getAllDiaries, create } from './services/diaries'
 import axios from 'axios'
 
+interface ErrorDetail {
+  code: string
+  validation: string
+  message: string
+  path: string[]
+}
+
+interface ErrorResponse {
+  error: ErrorDetail[]
+}
+
 const App = () => {
   const [diaries, setDiaries] = useState<DiaryEntry[]>([])
   const [date, setDate] = useState<string>('')
   const [visibility, setVisibility] = useState<Visibility>(Visibility.Good)
   const [weather, setWeather] = useState<Weather>(Weather.Cloudy)
   const [comment, setComment] = useState<string>('')
-  const [error, setError] = useState<string>('')
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     getAllDiaries().then((data) => {
@@ -44,13 +55,12 @@ const App = () => {
       setDiaries(diaries.concat(diaryEntry))
     } catch (e: unknown) {
       if (axios.isAxiosError(e)) {
-        if (e?.response?.data && typeof e?.response?.data === 'string') {
-          const message = e.response.data.replace(
-            'Something went wrong. Error: ',
-            ''
-          )
-          console.error(message)
-          setError(message)
+        const errorData = e.response?.data as ErrorResponse
+
+        if (errorData.error && errorData.error.length > 0) {
+          const errorMessage = errorData.error[0].message
+          console.error(errorMessage)
+          setError(errorMessage)
         } else {
           setError('Unrecognized axios error')
         }
@@ -58,12 +68,15 @@ const App = () => {
         console.error('Unknown error', e)
         setError('Unknown error')
       }
+
+      setTimeout(() => setError(null), 5000)
     }
   }
 
   return (
     <div>
-      {error}
+      <h2>Add new Entry</h2>
+      <p style={{ color: 'red' }}>{error}</p>
       <form onSubmit={handleSubmit}>
         <div>
           date
