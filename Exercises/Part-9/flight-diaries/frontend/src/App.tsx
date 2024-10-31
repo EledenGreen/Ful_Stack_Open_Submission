@@ -38,13 +38,11 @@ const App = () => {
   }
 
   const onWeatherChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault()
     const value = event.target.value as Weather
     setWeather(value)
   }
 
   const onVisibilityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    event.preventDefault()
     const value = event.target.value as Visibility
     setVisibility(value)
   }
@@ -88,15 +86,31 @@ const App = () => {
         </div>
         <div>
           visibility
-          <input
-            type="string"
-            value={visibility}
-            onChange={onVisibilityChange}
-          />
+          {Object.values(Visibility).map((option, index) => (
+            <label key={index}>
+              <input
+                type="radio"
+                value={option}
+                checked={visibility === option}
+                onChange={onVisibilityChange}
+              />
+              {option}
+            </label>
+          ))}
         </div>
         <div>
           weather
-          <input type="string" value={weather} onChange={onWeatherChange} />
+          {Object.values(Weather).map((option, index) => (
+            <label key={index}>
+              <input
+                type="radio"
+                value={option}
+                checked={weather === option}
+                onChange={onWeatherChange}
+              />
+              {option}
+            </label>
+          ))}
         </div>
         <div>
           comment
@@ -106,7 +120,7 @@ const App = () => {
             onChange={(event) => setComment(event.target.value)}
           />
         </div>
-        <button type="submit">Submit</button>
+        <button type="submit">add</button>
       </form>
       <ul>
         <h3>Diary entries</h3>
