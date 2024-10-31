@@ -1,31 +1,30 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { NonSensitiveDiaryEntry } from './types'
+import { getAllDiaries } from './services/diaries'
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [diaries, setDiaries] = useState<NonSensitiveDiaryEntry[]>([])
+
+  useEffect(() => {
+    getAllDiaries().then((data) => {
+      setDiaries(data)
+    })
+  }, [])
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+      <ul>
+        <h3>Diary entries</h3>
+
+        {diaries.map((diary, index) => (
+          <div key={index}>
+            <h3>{diary.date}</h3>
+            <p>Visibility: {diary.visibility}</p>
+            <p>Weather: {diary.weather}</p>
+          </div>
+        ))}
+      </ul>
+    </div>
   )
 }
 
