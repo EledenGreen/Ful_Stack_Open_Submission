@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import patientService from "../services/patients";
+import diagnosesService from "../services/diagnosis";
 import { useParams } from "react-router-dom";
-import { Patient } from "../types";
+import { Diagnosis, Patient } from "../types";
 
 const PatientPage = () => {
   const [patient, setPatient] = useState<Patient>();
+  const [diagnosis, setDiagnosis] = useState<Diagnosis[]>();
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
@@ -16,8 +18,25 @@ const PatientPage = () => {
         console.log(error);
       }
     };
+
+    const fetchAll = async () => {
+      try {
+        const diagnosis = await diagnosesService.getAll();
+        setDiagnosis(diagnosis);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     fetchPatientById(id);
+    fetchAll();
   }, [id]);
+
+  const diagnosisCode = (code: string) => {
+    const result = diagnosis?.find((p) => p.code === code);
+
+    return result?.name;
+  };
 
   if (!patient) {
     return <>no user</>;
@@ -38,7 +57,9 @@ const PatientPage = () => {
                 {entry.date} {entry.description}
                 <ul>
                   {entry.diagnosisCodes?.map((code) => (
-                    <li key={code}>{code}</li>
+                    <li key={code}>
+                      {code} {diagnosisCode(code)}
+                    </li>
                   ))}
                 </ul>
               </div>
