@@ -1,5 +1,6 @@
 import express, { Request, NextFunction, Response } from "express";
 import {
+  Entry,
   EntryWithoutId,
   NewPatientEntry,
   Patient,
@@ -71,7 +72,7 @@ const newEntryParser = (
 router.post(
   "/:id/entries",
   newEntryParser,
-  (req: Request<Params, unknown, EntryWithoutId>, res: Response<Patient>) => {
+  (req: Request<Params, unknown, EntryWithoutId>, res: Response<Entry>) => {
     const patientId = req.params.id;
     const result = patientService.addEntry(req.body, patientId);
     res.json(result);

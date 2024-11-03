@@ -11,7 +11,7 @@ import {
   TextField,
 } from "@mui/material";
 import React, { useState } from "react";
-import { Diagnosis } from "../../types";
+import { Diagnosis, EntryWithoutId } from "../../types";
 import { codes, healthRating } from "../../constants";
 import { Theme, useTheme } from "@mui/material/styles";
 
@@ -38,12 +38,14 @@ function getStyles(
   };
 }
 
-const HealthCheckForm: React.FC = () => {
-  const [description, setDescription] = useState<string>();
-  const [date, setDate] = useState<string>();
-  const [specialist, setSpecialist] = useState<string>();
+const HealthCheckForm: React.FC<{
+  onSubmit: (values: EntryWithoutId) => void;
+}> = ({ onSubmit }) => {
+  const [description, setDescription] = useState<string>("");
+  const [date, setDate] = useState<string>("");
+  const [specialist, setSpecialist] = useState<string>("");
   const [diagnosisCodes, setDiagnosisCodes] = React.useState<string[]>([]);
-
+  const [healthCheckRating, setHealth] = useState<number>(0);
   const theme = useTheme();
 
   const handleChange = (event: SelectChangeEvent<typeof diagnosisCodes>) => {
@@ -58,6 +60,14 @@ const HealthCheckForm: React.FC = () => {
 
   const handleSubmit = (event: React.SyntheticEvent) => {
     event.preventDefault();
+    onSubmit({
+      description,
+      date,
+      specialist,
+      diagnosisCodes,
+      healthCheckRating,
+      type: "HealthCheck",
+    });
   };
 
   return (
@@ -113,7 +123,8 @@ const HealthCheckForm: React.FC = () => {
         <TextField
           id="standard-select-currency"
           select
-          defaultValue={0}
+          value={healthCheckRating}
+          onChange={(event) => setHealth(Number(event.target.value))}
           label="Select"
           helperText="Please select your health rating"
           variant="standard"

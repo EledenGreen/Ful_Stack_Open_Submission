@@ -3,6 +3,7 @@ import {
   Patient,
   NewPatientEntry,
   EntryWithoutId,
+  Entry,
 } from "../types";
 import patients, { data } from "../../data/patients";
 import { v1 as uuid } from "uuid";
@@ -37,7 +38,7 @@ const addPatient = (entry: NewPatientEntry): Patient => {
 const addEntry = (
   entry: EntryWithoutId,
   patientId: string
-): Patient | undefined => {
+): Entry | undefined => {
   const newEntry = {
     id: uuid(),
     ...entry,
@@ -48,7 +49,7 @@ const addEntry = (
 
   patients.map((p) => (p.id === patientId ? patient : p));
 
-  return patient;
+  return newEntry;
 };
 
 export default {
