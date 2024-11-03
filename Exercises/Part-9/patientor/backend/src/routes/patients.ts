@@ -10,8 +10,9 @@ router.get("/", (_req, res: Response<PatientSecure[]>) => {
   res.send(patientService.getNonSensitivePatients());
 });
 
-router.get("/:id", (req, res: Response<PatientSecure>) => {
-  res.send(patientService.getPatientById(req.params.id));
+router.get("/:id", (req, res: Response<Patient | undefined>) => {
+  const result = patientService.getPatientById(req.params.id);
+  res.send(result);
 });
 
 const newPatientParser = (req: Request, _res: Response, next: NextFunction) => {
