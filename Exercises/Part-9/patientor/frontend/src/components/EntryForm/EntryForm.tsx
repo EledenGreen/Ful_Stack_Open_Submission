@@ -1,6 +1,8 @@
 import {
   Box,
+  Button,
   Chip,
+  Grid,
   InputLabel,
   MenuItem,
   OutlinedInput,
@@ -10,7 +12,7 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { Diagnosis } from "../../types";
-import { codes } from "../../constants";
+import { codes, healthRating } from "../../constants";
 import { Theme, useTheme } from "@mui/material/styles";
 
 const ITEM_HEIGHT = 48;
@@ -54,8 +56,8 @@ const HealthCheckForm: React.FC = () => {
     );
   };
 
-  const handleSubmit = () => {
-    console.log("hello");
+  const handleSubmit = (event: React.SyntheticEvent) => {
+    event.preventDefault();
   };
 
   return (
@@ -107,6 +109,46 @@ const HealthCheckForm: React.FC = () => {
             </MenuItem>
           ))}
         </Select>
+        <br />
+        <TextField
+          id="standard-select-currency"
+          select
+          defaultValue={0}
+          label="Select"
+          helperText="Please select your health rating"
+          variant="standard"
+        >
+          {healthRating.map((option) => (
+            <MenuItem key={option} value={option}>
+              {option}
+            </MenuItem>
+          ))}
+        </TextField>
+
+        <Grid>
+          <Grid item>
+            <Button
+              color="secondary"
+              variant="contained"
+              style={{ float: "left" }}
+              type="button"
+              onClick={handleSubmit}
+            >
+              Cancel
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              style={{
+                float: "right",
+              }}
+              type="submit"
+              variant="contained"
+            >
+              Add
+            </Button>
+          </Grid>
+        </Grid>
       </form>
     </div>
   );

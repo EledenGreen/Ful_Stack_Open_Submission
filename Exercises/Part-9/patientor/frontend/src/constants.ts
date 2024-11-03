@@ -17,3 +17,5 @@ export const codes = [
   "S62.5",
   "H35.29",
 ];
+
+export const healthRating = [0, 1, 2, 3];
