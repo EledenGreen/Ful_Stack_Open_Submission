@@ -5,10 +5,14 @@ import { EntryWithoutId, Patient } from "../types";
 import EntryDetails from "./EntryTypes/EntryDetails";
 import HealthCheckForm from "./EntryForm/EntryForm";
 import axios from "axios";
+import { Button, Dialog } from "@mui/material";
 
 const PatientPage = () => {
   const [patient, setPatient] = useState<Patient>();
   const [error, setError] = useState<string>();
+  const [openHealthCheck, setOpenHealthCheck] = useState(false);
+  //const [openOccupational, setOpenOccupational] = useState(false);
+  //const [openHospital, setOpenHospital] = useState(false);
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
@@ -48,6 +52,12 @@ const PatientPage = () => {
     }
   };
 
+  const handleClose = () => {
+    setOpenHealthCheck(false);
+    //setOpenOccupational(false);
+    //setOpenHospital(false);
+  };
+
   if (!patient) {
     return <>no user</>;
   }
@@ -62,11 +72,20 @@ const PatientPage = () => {
       <div>
         <h4>entries</h4>
         <div>
+          <Button variant="contained" onClick={() => setOpenHealthCheck(true)}>
+            Add Health Check Entry
+          </Button>
+        </div>
+        <div>
+          <Dialog open={openHealthCheck} onClose={handleClose}>
+            <HealthCheckForm onSubmit={onSubmit} onCancel={handleClose} />
+          </Dialog>
+        </div>
+        <div>
           {patient.entries.map((entry, index) => {
             return (
               <div key={index}>
                 <EntryDetails entry={entry} />
-                <HealthCheckForm onSubmit={onSubmit} />
               </div>
             );
           })}

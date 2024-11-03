@@ -40,7 +40,8 @@ function getStyles(
 
 const HealthCheckForm: React.FC<{
   onSubmit: (values: EntryWithoutId) => void;
-}> = ({ onSubmit }) => {
+  onCancel: () => void;
+}> = ({ onSubmit, onCancel }) => {
   const [description, setDescription] = useState<string>("");
   const [date, setDate] = useState<string>("");
   const [specialist, setSpecialist] = useState<string>("");
@@ -143,7 +144,7 @@ const HealthCheckForm: React.FC<{
               variant="contained"
               style={{ float: "left" }}
               type="button"
-              onClick={handleSubmit}
+              onClick={onCancel}
             >
               Cancel
             </Button>
