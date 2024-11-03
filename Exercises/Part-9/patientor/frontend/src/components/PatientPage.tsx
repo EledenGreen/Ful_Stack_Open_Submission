@@ -3,6 +3,7 @@ import patientService from "../services/patients";
 import { useParams } from "react-router-dom";
 import { Patient } from "../types";
 import EntryDetails from "./EntryTypes/EntryDetails";
+import HealthCheckForm from "./EntryForm/EntryForm";
 
 const PatientPage = () => {
   const [patient, setPatient] = useState<Patient>();
@@ -38,6 +39,7 @@ const PatientPage = () => {
             return (
               <div key={index}>
                 <EntryDetails entry={entry} />
+                <HealthCheckForm />
               </div>
             );
           })}
