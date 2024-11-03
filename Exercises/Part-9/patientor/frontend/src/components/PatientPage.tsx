@@ -6,12 +6,13 @@ import EntryDetails from "./EntryTypes/EntryDetails";
 import HealthCheckForm from "./EntryForm/EntryForm";
 import axios from "axios";
 import { Button, Dialog } from "@mui/material";
+import OccupationalForm from "./EntryForm/OccupationalForm";
 
 const PatientPage = () => {
   const [patient, setPatient] = useState<Patient>();
   const [error, setError] = useState<string>();
   const [openHealthCheck, setOpenHealthCheck] = useState(false);
-  //const [openOccupational, setOpenOccupational] = useState(false);
+  const [openOccupational, setOpenOccupational] = useState(false);
   //const [openHospital, setOpenHospital] = useState(false);
   const { id } = useParams<{ id: string }>();
 
@@ -34,7 +35,7 @@ const PatientPage = () => {
       patient?.entries.push(entry);
       setPatient(patient);
       setOpenHealthCheck(false);
-      //setOpenOccupational(false);
+      setOpenOccupational(false);
       //setOpenHospital(false);
     } catch (e: unknown) {
       if (axios.isAxiosError(e)) {
@@ -57,7 +58,7 @@ const PatientPage = () => {
 
   const handleClose = () => {
     setOpenHealthCheck(false);
-    //setOpenOccupational(false);
+    setOpenOccupational(false);
     //setOpenHospital(false);
   };
 
@@ -78,10 +79,16 @@ const PatientPage = () => {
           <Button variant="contained" onClick={() => setOpenHealthCheck(true)}>
             Add Health Check Entry
           </Button>
+          <Button variant="contained" onClick={() => setOpenOccupational(true)}>
+            Add Occupational Entry
+          </Button>
         </div>
         <div>
           <Dialog open={openHealthCheck} onClose={handleClose}>
             <HealthCheckForm onSubmit={onSubmit} onCancel={handleClose} />
+          </Dialog>
+          <Dialog open={openOccupational} onClose={handleClose}>
+            <OccupationalForm onSubmit={onSubmit} onCancel={handleClose} />
           </Dialog>
         </div>
         <div>
