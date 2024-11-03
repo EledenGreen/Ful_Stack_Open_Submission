@@ -33,6 +33,9 @@ const PatientPage = () => {
       const entry = await patientService.createEntry(id, values);
       patient?.entries.push(entry);
       setPatient(patient);
+      setOpenHealthCheck(false);
+      //setOpenOccupational(false);
+      //setOpenHospital(false);
     } catch (e: unknown) {
       if (axios.isAxiosError(e)) {
         if (e?.response?.data && typeof e?.response?.data === "string") {
