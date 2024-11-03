@@ -12,7 +12,7 @@ import {
   TextField,
 } from "@mui/material";
 import React, { useState } from "react";
-import { Diagnosis, EntryWithoutId, SickLeave } from "../../types";
+import { Diagnosis, Discharge, EntryWithoutId } from "../../types";
 import { codes } from "../../constants";
 import { Theme, useTheme } from "@mui/material/styles";
 
@@ -39,7 +39,7 @@ function getStyles(
   };
 }
 
-const OccupationalForm: React.FC<{
+const HospitalForm: React.FC<{
   onSubmit: (values: EntryWithoutId) => void;
   onCancel: () => void;
 }> = ({ onSubmit, onCancel }) => {
@@ -47,10 +47,9 @@ const OccupationalForm: React.FC<{
   const [date, setDate] = useState<string>("");
   const [specialist, setSpecialist] = useState<string>("");
   const [diagnosisCodes, setDiagnosisCodes] = React.useState<string[]>([]);
-  const [employerName, setEmployerName] = useState<string>("");
-  const [sickLeave, setSickLeave] = useState<SickLeave>({
-    startDate: "",
-    endDate: "",
+  const [discharge, setDischarge] = useState<Discharge>({
+    date: "",
+    criteria: "",
   });
   const theme = useTheme();
 
@@ -71,15 +70,14 @@ const OccupationalForm: React.FC<{
       date,
       specialist,
       diagnosisCodes,
-      employerName,
-      sickLeave,
-      type: "OccupationalHealthcare",
+      discharge,
+      type: "Hospital",
     });
   };
 
   return (
     <div className="entryForm">
-      <h4>New Occupational Entry</h4>
+      <h4>New Hospital Entry</h4>
       <form onSubmit={handleSubmit}>
         <TextField
           label="Description"
@@ -127,33 +125,27 @@ const OccupationalForm: React.FC<{
           ))}
         </Select>
         <br />
-        <TextField
-          label="Employer Name"
-          fullWidth
-          value={employerName}
-          onChange={(event) => setEmployerName(event.target.value)}
-        />
+
         <Box>
-          <h3>Sick Leave</h3>
-          <InputLabel>Start Date</InputLabel>
+          <h3>Discharge</h3>
+          <InputLabel>date</InputLabel>
           <Input
             type="date"
-            value={sickLeave?.startDate}
+            value={discharge?.date}
             onChange={(e) =>
-              setSickLeave((prev) => ({
+              setDischarge((prev) => ({
                 ...prev,
-                startDate: e.target.value,
+                date: e.target.value,
               }))
             }
           />
-          <InputLabel>End Date</InputLabel>
+          <InputLabel>Criteria</InputLabel>
           <Input
-            type="date"
-            value={sickLeave?.endDate}
+            value={discharge?.criteria}
             onChange={(e) =>
-              setSickLeave((prev) => ({
+              setDischarge((prev) => ({
                 ...prev,
-                endDate: e.target.value,
+                criteria: e.target.value,
               }))
             }
           />
@@ -188,4 +180,4 @@ const OccupationalForm: React.FC<{
   );
 };
 
-export default OccupationalForm;
+export default HospitalForm;

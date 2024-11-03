@@ -7,13 +7,14 @@ import HealthCheckForm from "./EntryForm/EntryForm";
 import axios from "axios";
 import { Button, Dialog } from "@mui/material";
 import OccupationalForm from "./EntryForm/OccupationalForm";
+import HospitalForm from "./EntryForm/HospitalForm";
 
 const PatientPage = () => {
   const [patient, setPatient] = useState<Patient>();
   const [error, setError] = useState<string>();
   const [openHealthCheck, setOpenHealthCheck] = useState(false);
   const [openOccupational, setOpenOccupational] = useState(false);
-  //const [openHospital, setOpenHospital] = useState(false);
+  const [openHospital, setOpenHospital] = useState(false);
   const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
@@ -36,7 +37,7 @@ const PatientPage = () => {
       setPatient(patient);
       setOpenHealthCheck(false);
       setOpenOccupational(false);
-      //setOpenHospital(false);
+      setOpenHospital(false);
     } catch (e: unknown) {
       if (axios.isAxiosError(e)) {
         if (e?.response?.data && typeof e?.response?.data === "string") {
@@ -59,7 +60,7 @@ const PatientPage = () => {
   const handleClose = () => {
     setOpenHealthCheck(false);
     setOpenOccupational(false);
-    //setOpenHospital(false);
+    setOpenHospital(false);
   };
 
   if (!patient) {
@@ -82,6 +83,9 @@ const PatientPage = () => {
           <Button variant="contained" onClick={() => setOpenOccupational(true)}>
             Add Occupational Entry
           </Button>
+          <Button variant="contained" onClick={() => setOpenHospital(true)}>
+            Add Hospital Entry
+          </Button>
         </div>
         <div>
           <Dialog open={openHealthCheck} onClose={handleClose}>
@@ -89,6 +93,9 @@ const PatientPage = () => {
           </Dialog>
           <Dialog open={openOccupational} onClose={handleClose}>
             <OccupationalForm onSubmit={onSubmit} onCancel={handleClose} />
+          </Dialog>
+          <Dialog open={openHospital} onClose={handleClose}>
+            <HospitalForm onSubmit={onSubmit} onCancel={handleClose} />
           </Dialog>
         </div>
         <div>
