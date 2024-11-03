@@ -5,7 +5,7 @@ import {
   EntryWithoutId,
   Entry,
 } from "../types";
-import patients, { data } from "../../data/patients";
+import patients, { data, getPatientEntries } from "../../data/patients";
 import { v1 as uuid } from "uuid";
 
 const getNonSensitivePatients = (): PatientSecure[] => {
@@ -31,7 +31,10 @@ const addPatient = (entry: NewPatientEntry): Patient => {
     entries: [],
   };
 
-  patients.push(NewPatientEntry);
+  data.push(NewPatientEntry);
+
+  patients.length = 0;
+  patients.push(...getPatientEntries());
   return NewPatientEntry;
 };
 
@@ -47,7 +50,7 @@ const addEntry = (
 
   patient?.entries.push(newEntry);
 
-  patients.map((p) => (p.id === patientId ? patient : p));
+  data.map((p) => (p.id === patientId ? patient : p));
 
   return newEntry;
 };

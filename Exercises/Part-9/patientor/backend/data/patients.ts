@@ -113,10 +113,14 @@ export const data: Patient[] = [
   },
 ];
 
-const patientEntries: PatientSecure[] = data.map((obj) => {
-  const object = toNewPatientEntry(obj) as Patient;
-  object.id = obj.id;
-  return object;
-});
+export const getPatientEntries = (): PatientSecure[] => {
+  return data.map((obj) => {
+    const object = toNewPatientEntry(obj) as Patient;
+    object.id = obj.id;
+    return object;
+  });
+};
+
+const patientEntries = getPatientEntries();
 
 export default patientEntries;
