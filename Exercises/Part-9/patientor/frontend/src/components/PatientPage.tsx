@@ -5,7 +5,7 @@ import { EntryWithoutId, Patient } from "../types";
 import EntryDetails from "./EntryTypes/EntryDetails";
 import HealthCheckForm from "./EntryForm/EntryForm";
 import axios from "axios";
-import { Button, Dialog } from "@mui/material";
+import { Button, ButtonGroup, Dialog } from "@mui/material";
 import OccupationalForm from "./EntryForm/OccupationalForm";
 import HospitalForm from "./EntryForm/HospitalForm";
 
@@ -77,15 +77,43 @@ const PatientPage = () => {
       <div>
         <h4>entries</h4>
         <div>
-          <Button variant="contained" onClick={() => setOpenHealthCheck(true)}>
-            Add Health Check Entry
-          </Button>
-          <Button variant="contained" onClick={() => setOpenOccupational(true)}>
-            Add Occupational Entry
-          </Button>
-          <Button variant="contained" onClick={() => setOpenHospital(true)}>
-            Add Hospital Entry
-          </Button>
+          <ButtonGroup
+            variant="outlined"
+            aria-label="Basic button group"
+            sx={{
+              border: "1px black solid",
+              backgroundColor: "lightblue",
+            }}
+          >
+            <Button
+              onClick={() => setOpenHealthCheck(true)}
+              sx={{
+                color: "black",
+
+                "&:hover": { backgroundColor: "lightcyan" },
+              }}
+            >
+              Add Health Check Entry
+            </Button>
+            <Button
+              onClick={() => setOpenOccupational(true)}
+              sx={{
+                color: "black",
+                "&:hover": { backgroundColor: "lightcyan" },
+              }}
+            >
+              Add Occupational Entry
+            </Button>
+            <Button
+              onClick={() => setOpenHospital(true)}
+              sx={{
+                color: "black",
+                "&:hover": { backgroundColor: "lightcyan" },
+              }}
+            >
+              Add Hospital Entry
+            </Button>
+          </ButtonGroup>
         </div>
         <div>
           <Dialog open={openHealthCheck} onClose={handleClose}>
