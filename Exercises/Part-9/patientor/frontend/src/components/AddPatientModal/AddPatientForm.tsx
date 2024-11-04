@@ -8,6 +8,7 @@ import {
   Grid,
   Button,
   SelectChangeEvent,
+  Divider,
 } from "@mui/material";
 
 import { PatientFormValues, Gender } from "../../types";
@@ -100,7 +101,7 @@ const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
             </MenuItem>
           ))}
         </Select>
-
+        <Divider sx={{ marginBottom: "10px" }} />
         <Grid>
           <Grid item>
             <Button
