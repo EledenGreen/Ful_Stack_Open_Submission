@@ -2,6 +2,8 @@ import {
   Box,
   Button,
   Chip,
+  DialogContent,
+  DialogTitle,
   Grid,
   Input,
   InputLabel,
@@ -77,105 +79,110 @@ const HospitalForm: React.FC<{
 
   return (
     <div className="entryForm">
-      <h4>New Hospital Entry</h4>
-      <form onSubmit={handleSubmit}>
-        <TextField
-          label="Description"
-          fullWidth
-          value={description}
-          onChange={(event) => setDescription(event.target.value)}
-        />
-        <TextField
-          fullWidth
-          type="date"
-          value={date}
-          onChange={(event) => setDate(event.target.value)}
-        />
-        <TextField
-          label="Specialist"
-          fullWidth
-          value={specialist}
-          onChange={(event) => setSpecialist(event.target.value)}
-        />
-        <InputLabel id="demo-multiple-chip-label">Diagnosis Codes</InputLabel>
-        <Select
-          labelId="demo-multiple-chip-label"
-          id="demo-multiple-chip"
-          multiple
-          value={diagnosisCodes}
-          onChange={handleChange}
-          input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-          renderValue={(selected) => (
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-              {selected.map((value) => (
-                <Chip key={value} label={value} />
-              ))}
-            </Box>
-          )}
-          MenuProps={MenuProps}
-        >
-          {codes.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, diagnosisCodes, theme)}
-            >
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-        <br />
-
-        <Box>
-          <h3>Discharge</h3>
-          <InputLabel>date</InputLabel>
-          <Input
+      <DialogTitle>New Hospital Entry</DialogTitle>
+      <DialogContent>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            label="Description"
+            fullWidth
+            required
+            value={description}
+            onChange={(event) => setDescription(event.target.value)}
+          />
+          <TextField
+            fullWidth
+            required
             type="date"
-            value={discharge?.date}
-            onChange={(e) =>
-              setDischarge((prev) => ({
-                ...prev,
-                date: e.target.value,
-              }))
-            }
+            value={date}
+            onChange={(event) => setDate(event.target.value)}
           />
-          <InputLabel>Criteria</InputLabel>
-          <Input
-            value={discharge?.criteria}
-            onChange={(e) =>
-              setDischarge((prev) => ({
-                ...prev,
-                criteria: e.target.value,
-              }))
-            }
+          <TextField
+            label="Specialist"
+            fullWidth
+            required
+            value={specialist}
+            onChange={(event) => setSpecialist(event.target.value)}
           />
-        </Box>
+          <InputLabel id="demo-multiple-chip-label">Diagnosis Codes</InputLabel>
+          <Select
+            labelId="demo-multiple-chip-label"
+            id="demo-multiple-chip"
+            multiple
+            value={diagnosisCodes}
+            onChange={handleChange}
+            input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+            renderValue={(selected) => (
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                {selected.map((value) => (
+                  <Chip key={value} label={value} />
+                ))}
+              </Box>
+            )}
+            MenuProps={MenuProps}
+          >
+            {codes.map((name) => (
+              <MenuItem
+                key={name}
+                value={name}
+                style={getStyles(name, diagnosisCodes, theme)}
+              >
+                {name}
+              </MenuItem>
+            ))}
+          </Select>
+          <br />
 
-        <Grid>
-          <Grid item>
-            <Button
-              color="secondary"
-              variant="contained"
-              style={{ float: "left" }}
-              type="button"
-              onClick={onCancel}
-            >
-              Cancel
-            </Button>
+          <Box>
+            <h3>Discharge</h3>
+            <InputLabel>date</InputLabel>
+            <Input
+              type="date"
+              value={discharge?.date}
+              onChange={(e) =>
+                setDischarge((prev) => ({
+                  ...prev,
+                  date: e.target.value,
+                }))
+              }
+            />
+            <InputLabel>Criteria</InputLabel>
+            <Input
+              value={discharge?.criteria}
+              onChange={(e) =>
+                setDischarge((prev) => ({
+                  ...prev,
+                  criteria: e.target.value,
+                }))
+              }
+            />
+          </Box>
+          <br />
+          <Grid>
+            <Grid item>
+              <Button
+                color="secondary"
+                variant="contained"
+                style={{ float: "left" }}
+                type="button"
+                onClick={onCancel}
+              >
+                Cancel
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                style={{
+                  float: "right",
+                }}
+                type="submit"
+                variant="contained"
+              >
+                Add
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item>
-            <Button
-              style={{
-                float: "right",
-              }}
-              type="submit"
-              variant="contained"
-            >
-              Add
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
+        </form>
+      </DialogContent>
     </div>
   );
 };

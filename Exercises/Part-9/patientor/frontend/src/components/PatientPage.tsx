@@ -5,13 +5,24 @@ import { EntryWithoutId, Patient } from "../types";
 import EntryDetails from "./EntryTypes/EntryDetails";
 import HealthCheckForm from "./EntryForm/EntryForm";
 import axios from "axios";
-import { Button, ButtonGroup, Dialog } from "@mui/material";
+import { Alert, Button, ButtonGroup, Dialog } from "@mui/material";
 import OccupationalForm from "./EntryForm/OccupationalForm";
 import HospitalForm from "./EntryForm/HospitalForm";
 
+interface ErrorDetail {
+  code: string;
+  validation: string;
+  message: string;
+  path: string[];
+}
+
+interface ErrorResponse {
+  error: ErrorDetail[];
+}
+
 const PatientPage = () => {
   const [patient, setPatient] = useState<Patient>();
-  const [error, setError] = useState<string>();
+  const [error, setError] = useState<string | null>(null);
   const [openHealthCheck, setOpenHealthCheck] = useState(false);
   const [openOccupational, setOpenOccupational] = useState(false);
   const [openHospital, setOpenHospital] = useState(false);
@@ -40,13 +51,11 @@ const PatientPage = () => {
       setOpenHospital(false);
     } catch (e: unknown) {
       if (axios.isAxiosError(e)) {
-        if (e?.response?.data && typeof e?.response?.data === "string") {
-          const message = e.response.data.replace(
-            "Something went wrong. Error: ",
-            ""
-          );
-          console.error(message);
-          setError(message);
+        const errorData = e.response?.data as ErrorResponse;
+        if (errorData.error && errorData.error.length > 0) {
+          const errorMessage = errorData.error[0].message;
+          console.error(errorMessage);
+          setError(errorMessage);
         } else {
           setError("Unrecognized axios error");
         }
@@ -54,6 +63,8 @@ const PatientPage = () => {
         console.error("Unknown error", e);
         setError("Unknown error");
       }
+
+      setTimeout(() => setError(null), 5000);
     }
   };
 
@@ -68,7 +79,6 @@ const PatientPage = () => {
   }
   return (
     <>
-      {error}
       <h3>
         {patient.name}, {patient.gender}
       </h3>
@@ -117,12 +127,15 @@ const PatientPage = () => {
         </div>
         <div>
           <Dialog open={openHealthCheck} onClose={handleClose}>
+            {error && <Alert severity="error">{error}</Alert>}
             <HealthCheckForm onSubmit={onSubmit} onCancel={handleClose} />
           </Dialog>
           <Dialog open={openOccupational} onClose={handleClose}>
+            {error && <Alert severity="error">{error}</Alert>}
             <OccupationalForm onSubmit={onSubmit} onCancel={handleClose} />
           </Dialog>
           <Dialog open={openHospital} onClose={handleClose}>
+            {error && <Alert severity="error">{error}</Alert>}
             <HospitalForm onSubmit={onSubmit} onCancel={handleClose} />
           </Dialog>
         </div>

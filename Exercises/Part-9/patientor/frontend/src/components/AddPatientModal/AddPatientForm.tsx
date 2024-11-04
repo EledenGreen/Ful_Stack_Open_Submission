@@ -62,6 +62,7 @@ const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
         <TextField
           label="Name"
           fullWidth
+          required
           value={name}
           onChange={({ target }) => setName(target.value)}
         />
@@ -80,6 +81,7 @@ const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
         <TextField
           label="Occupation"
           fullWidth
+          required
           value={occupation}
           onChange={({ target }) => setOccupation(target.value)}
         />
@@ -88,6 +90,7 @@ const AddPatientForm = ({ onCancel, onSubmit }: Props) => {
         <Select
           label="Gender"
           fullWidth
+          required
           value={gender}
           onChange={onGenderChange}
         >

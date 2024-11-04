@@ -2,6 +2,8 @@ import {
   Box,
   Button,
   Chip,
+  DialogContent,
+  DialogTitle,
   Grid,
   InputLabel,
   MenuItem,
@@ -73,95 +75,101 @@ const HealthCheckForm: React.FC<{
 
   return (
     <div className="entryForm">
-      <h4>New HealthCheck Entry</h4>
-      <form onSubmit={handleSubmit}>
-        <TextField
-          label="Description"
-          fullWidth
-          value={description}
-          onChange={(event) => setDescription(event.target.value)}
-        />
-        <TextField
-          fullWidth
-          type="date"
-          value={date}
-          onChange={(event) => setDate(event.target.value)}
-        />
-        <TextField
-          label="Specialist"
-          fullWidth
-          value={specialist}
-          onChange={(event) => setSpecialist(event.target.value)}
-        />
-        <InputLabel id="demo-multiple-chip-label">Diagnosis Codes</InputLabel>
-        <Select
-          labelId="demo-multiple-chip-label"
-          id="demo-multiple-chip"
-          multiple
-          value={diagnosisCodes}
-          onChange={handleChange}
-          input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
-          renderValue={(selected) => (
-            <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
-              {selected.map((value) => (
-                <Chip key={value} label={value} />
-              ))}
-            </Box>
-          )}
-          MenuProps={MenuProps}
-        >
-          {codes.map((name) => (
-            <MenuItem
-              key={name}
-              value={name}
-              style={getStyles(name, diagnosisCodes, theme)}
-            >
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-        <br />
-        <TextField
-          id="standard-select-currency"
-          select
-          value={healthCheckRating}
-          onChange={(event) => setHealth(Number(event.target.value))}
-          label="Select"
-          helperText="Please select your health rating"
-          variant="standard"
-        >
-          {healthRating.map((option) => (
-            <MenuItem key={option} value={option}>
-              {option}
-            </MenuItem>
-          ))}
-        </TextField>
-
-        <Grid>
-          <Grid item>
-            <Button
-              color="secondary"
-              variant="contained"
-              style={{ float: "left" }}
-              type="button"
-              onClick={onCancel}
-            >
-              Cancel
-            </Button>
+      <DialogTitle>New HealthCheck Entry</DialogTitle>
+      <DialogContent>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            label="Description"
+            fullWidth
+            required
+            value={description}
+            onChange={(event) => setDescription(event.target.value)}
+          />
+          <TextField
+            fullWidth
+            type="date"
+            required
+            value={date}
+            onChange={(event) => setDate(event.target.value)}
+          />
+          <TextField
+            label="Specialist"
+            fullWidth
+            required
+            value={specialist}
+            onChange={(event) => setSpecialist(event.target.value)}
+          />
+          <InputLabel id="demo-multiple-chip-label">Diagnosis Codes</InputLabel>
+          <Select
+            labelId="demo-multiple-chip-label"
+            id="demo-multiple-chip"
+            multiple
+            value={diagnosisCodes}
+            onChange={handleChange}
+            input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+            renderValue={(selected) => (
+              <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                {selected.map((value) => (
+                  <Chip key={value} label={value} />
+                ))}
+              </Box>
+            )}
+            MenuProps={MenuProps}
+          >
+            {codes.map((name) => (
+              <MenuItem
+                key={name}
+                value={name}
+                style={getStyles(name, diagnosisCodes, theme)}
+              >
+                {name}
+              </MenuItem>
+            ))}
+          </Select>
+          <br />
+          <TextField
+            id="standard-select-currency"
+            select
+            required
+            value={healthCheckRating}
+            onChange={(event) => setHealth(Number(event.target.value))}
+            label="Select"
+            helperText="Please select your health rating"
+            variant="standard"
+          >
+            {healthRating.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </TextField>
+          <br />
+          <Grid>
+            <Grid item>
+              <Button
+                color="secondary"
+                variant="contained"
+                style={{ float: "left" }}
+                type="button"
+                onClick={onCancel}
+              >
+                Cancel
+              </Button>
+            </Grid>
+            <Grid item>
+              <Button
+                style={{
+                  float: "right",
+                }}
+                type="submit"
+                variant="contained"
+              >
+                Add
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item>
-            <Button
-              style={{
-                float: "right",
-              }}
-              type="submit"
-              variant="contained"
-            >
-              Add
-            </Button>
-          </Grid>
-        </Grid>
-      </form>
+        </form>
+      </DialogContent>
     </div>
   );
 };
